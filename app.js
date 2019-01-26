@@ -5,15 +5,8 @@ const path = require('path');
 
 app.use(express.static("public"));
 
-app.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname + '/src/index.html'));
-});
-
-app.get('/api', function (req, res) {
-	res.send('Hello World!');
-});
-
-app.get('/', function (req, res) {
+app.get('/test', function (req, res) {
+	res.sendFile(path.join(__dirname + '/public/test.html'));
 });
 
 const PORT = 3000

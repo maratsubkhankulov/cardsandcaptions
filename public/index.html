@@ -12,6 +12,13 @@
 		<div class="card">
 			<img class="card" src="img/wonka.jpg">
     </div>
-		<script src="index.js"></script>
+		<script type="module" src="game.js"></script>
+		<script type="module" src="index.js"></script>
+		<script type="module">
+			import {run} from './index.js';
+
+			var hello = "Hello";
+			let game = run();
+		</script>
   </body>
 </html>
