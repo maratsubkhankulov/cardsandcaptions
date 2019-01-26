@@ -1,7 +1,10 @@
 console.log("index.js")
 
+let player_counter = 0; 
 class Player {
-	constructor() {
+	constructor(name) {
+		this.id = player_counter++;
+		this.name = name;
 		this.hand = new Array(); // Cards in hand
 		this.caption = null; // Current caption
 		this.points = new Array(); // Caption hands won
@@ -80,6 +83,15 @@ class Game {
 		}
 		console.log(`Transitioned state ${StateToString(this.state)} by action ${ActionToString(action)}. New state: ${StateToString(new_state)}`);
 		this.state = new_state;
+	}
+
+	// Player actions onto the game
+	playCard(voter, card) {
+		console.log(`Voter(${voter.name}) played Card(${card.id})`);
+	}
+	chooseWinningCard(judge, card) {
+		console.log(`Judge(${judge.name}) chose winning Card(${card.id})`);
+		console.log(`Winning card goes to... {}`);
 	}
 }
 
