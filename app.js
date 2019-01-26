@@ -3,6 +3,8 @@ const app = express();
 const request = require('request');
 const path = require('path');
 
+app.use(express.static("public"));
+
 app.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname + '/src/index.html'));
 });
@@ -16,5 +18,5 @@ app.get('/', function (req, res) {
 
 const PORT = 3000
 app.listen(PORT, function () {
-	console.log("Listening on port: " + PORT)
+	console.log("Listening on port: " + PORT);
 });
