@@ -72,6 +72,7 @@ export class Game {
 		this.turn_number = 0;
 	}
 
+  // System actions
 	changeState(action) {
 		if (action == undefined) {
 			throw "Attempting to change state with undefined action"
@@ -85,7 +86,11 @@ export class Game {
 		this.state = new_state;
 	}
 
-  // System actions
+	// Game room actions
+	addPlayer(player) {
+		this.players.push(player);
+	}
+
 	startGame() {
 		this.turn_number = 1;
 	}

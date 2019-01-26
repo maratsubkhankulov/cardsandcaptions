@@ -5,9 +5,13 @@ export function runTests() {
 
 	let tests = [
 		{
-			name: "InstantiateGame",
-			func: instantiateGame
-		}
+			name: "Count turns",
+			func: countTurns
+		},
+		{
+			name: "Create a multi player game",
+			func: multiPlayerGame
+		},
 	]
 
 	for (var i = 0; i < tests.length; i++) {
@@ -19,7 +23,7 @@ export function runTests() {
 	console.log("Tests complete");
 }
 
-function instantiateGame() {
+function countTurns() {
 	let game = new Game();
 
 	console.assert(game.turn_number == 0, game); 
@@ -36,3 +40,21 @@ function instantiateGame() {
 
 	console.assert(game.turn_number == Game.maxTurns());
 }
+
+function multiPlayerGame() {
+	let game = new Game();
+
+	let player1 = new Player("Steven");
+	let player2 = new Player("Jack");
+	let player3 = new Player("Alice");
+
+	game.addPlayer(player1);
+	game.addPlayer(player2);
+	game.addPlayer(player3);
+
+	console.log(game.players.length == 3, game.players);
+}
+
+function badStateTransitions() {
+}
+
