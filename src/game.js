@@ -244,6 +244,7 @@ export class Game {
 		judge.takeVotedImageCard(voter,card);
 		console.assert(judge.votes.length == numVotes + 1);
 
+		console.log(`Voter(${voter.name}) voted Card(${card.img})`);
 		if (this.isVotingCompleted()) {
 			this.collectVotes();
 		}
@@ -252,7 +253,7 @@ export class Game {
 	chooseWinningCard(judge, vote) {
 		console.assert(this.state == StateEnum.WAIT_FOR_JUDGMENT, `Unexpected state: ${StateToString(this.state)}`);
 		console.log(`Judge(${judge.name}) chose winning Card(${vote.card.img})`);
-		console.log(`Winning card goes to Player(${vote.player.name})`);
+		console.log(`CaptionCard(${judge.captionCard.caption}) goes to Player(${vote.player.name})`);
 
 		let winner = vote.player;
 
