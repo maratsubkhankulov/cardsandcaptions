@@ -12,14 +12,14 @@ export class Player {
 	constructor(name) {
 		this.id = player_counter++;
 		this.name = name;
-		this.hand = new Array(); // Cards in hand
+		this.hand = []; // Cards in hand
 		this.captionCard = null; // Current caption
-		this.points = new Array(); // Caption hands won
-		this.votes = new Array(); // Holds cards when this player is judge
+		this.points = []; // Caption hands won
+		this.votes = []; // Holds cards when this player is judge
 	}
 
 	takeCaptionCard(card) {
-		console.assert(this.captionCar == null);
+		console.assert(this.captionCar === null);
 		this.captionCard = card;
 	}
 
@@ -33,7 +33,7 @@ export class Player {
 	}
 
 	hasFullHand() {
-		return this.hand.length == Player.maxHandSize();
+		return this.hand.length === Player.maxHandSize();
 	}
 
 	clearVotes() {
@@ -80,7 +80,7 @@ const StateEnum = {
 
 function EnumToStr(Enum, value) {
 	for (var prop in Enum) {
-		if (Enum[prop] == value) {
+		if (Enum[prop] === value) {
 			return prop;
 		}
 	}
@@ -105,7 +105,7 @@ function ActionToString(value) {
 	return EnumToStr(ActionEnum, value);
 }
 
-const num_actions = Object.keys(ActionEnum).length;
+// TODO remove
 
 var transitions = new Array(num_states).fill(INVALID_STATE).map(() => new Array(num_states).fill(INVALID_STATE));
 transitions[StateEnum.WAIT_TO_START][ActionEnum.START] = StateEnum.WAIT_FOR_JUDGE;
@@ -123,9 +123,9 @@ export class Game {
 
 	constructor() {
 		this.state = StateEnum.WAIT_TO_START;
-		this.players = new Array(); // Cards in hand
-		this.caption_stack = new Array(); // Stack of caption cards
-		this.image_stack = new Array(); // Stack of image cards
+		this.players = []; // Cards in hand
+		this.caption_stack = []; // Stack of caption cards
+		this.image_stack = []; // Stack of image cards
 		this.turn_number = 0;
 		this.currentJudge = -1;
 	}
@@ -151,17 +151,17 @@ export class Game {
 	// Game state checks
 	isVotingCompleted() {
 		let judge = this.getCurrentJudge();
-		return judge.votes.length == this.players.length - 1;
+		return judge.votes.length === this.players.length - 1;
 	}
 
   // System actions
 	changeState(action) {
-		if (action == undefined) {
+		if (action === undefined) {
 			throw "Attempting to change state with undefined action"
 		}
 
 		const new_state = transitions[this.state][action];
-		if (new_state == INVALID_STATE) {
+		if (new_state === INVALID_STATE) {
 			throw `Invalid state transition: state(${StateToString(this.state)}) action(${ActionToString(action)})`;
 		}
 		console.log(`Transitioned state ${StateToString(this.state)} by action ${ActionToString(action)}. New state: ${StateToString(new_state)}`);
@@ -233,16 +233,16 @@ export class Game {
 	}
 
 	voteImageCard(voter, cardNumber) {
-		console.assert(this.state == StateEnum.WAIT_FOR_VOTERS);
-		console.assert(voter.hand.length == Player.maxHandSize());
+		console.assert(this.state === StateEnum.WAIT_FOR_VOTERS);
+		console.assert(voter.hand.length === Player.maxHandSize());
 		let card = voter.removeCardFromHand(cardNumber);
-		console.assert(voter.hand.length == Player.maxHandSize() - 1);
+		console.assert(voter.hand.length === Player.maxHandSize() - 1);
 
 		let judge = this.getCurrentJudge();
 		console.assert(!(judge.name === voter.name), "Judge cannot vote an image card");
 		let numVotes = judge.votes.length;
 		judge.takeVotedImageCard(voter,card);
-		console.assert(judge.votes.length == numVotes + 1);
+		console.assert(judge.votes.length === numVotes + 1);
 
 		console.log(`Voter(${voter.name}) voted Card(${card.img})`);
 		if (this.isVotingCompleted()) {
@@ -251,7 +251,7 @@ export class Game {
 	}
 
 	chooseWinningCard(judge, vote) {
-		console.assert(this.state == StateEnum.WAIT_FOR_JUDGMENT, `Unexpected state: ${StateToString(this.state)}`);
+		console.assert(this.state === StateEnum.WAIT_FOR_JUDGMENT, `Unexpected state: ${StateToString(this.state)}`);
 		console.log(`Judge(${judge.name}) chose winning Card(${vote.card.img})`);
 		console.log(`CaptionCard(${judge.captionCard.caption}) goes to Player(${vote.player.name})`);
 
