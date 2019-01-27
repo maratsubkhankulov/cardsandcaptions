@@ -11,3 +11,6 @@ open: `http://localhost:3000`
 
 run: `node app.js`
 open: `http://localhost:3000/test`
+
+# Resources
+https://dev.to/abvishek/publish-react-appcreate-react-app-on-facebook-instant-game--6j4
