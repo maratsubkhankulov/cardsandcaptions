@@ -3,7 +3,8 @@ import './GameView.css';
 import { Game } from './game';
 import { fillCardStacks, fillPlayers } from './game_utils';
 
-import wonka from './img/1.jpg';
+// Import static images
+require.context('../public/img', true);
 
 let game = new Game();
 
@@ -11,6 +12,7 @@ fillCardStacks(game);
 
 //TODO  remove - testing only
 fillPlayers(game);
+game.playersFillHands();
 
 game.startGame();
 
@@ -22,8 +24,8 @@ class GameView extends Component {
 		}
 	}
 
-	selectImageCard() {
-		alert("Image card selected");
+	selectImageCard(id) {
+		alert(`Image card(${id}) selected`);
 	}
 
 	selectPlayer(id, name) {
@@ -50,6 +52,17 @@ class GameView extends Component {
 					return <b onClick={() => this.selectPlayer(p.id, p.name)} key={p.id}> {p.name} </b>;
 				}
 			});
+
+		let imageCardsContent = "Not an active player";
+		if (this.state.activePlayer) {
+			const hand = this.state.activePlayer.hand;
+			imageCardsContent = hand.map((card) => (
+					<div className="card" onClick={() => this.selectImageCard(card.id)}>
+						<img src={card.img} key={card.id} className="card" alt={card.id} />
+					</div>
+				)
+			);
+		}
     return (
       <div className="Game">
 				<div className="PlayerPanel">
@@ -61,10 +74,8 @@ class GameView extends Component {
 						This is a caption
 					</div>
 				</div>
-				<div className="SelectCard">
-					<div className="card" onClick={this.selectImageCard}>
-						<img src={wonka} className="card" alt="logo" />
-					</div>
+				<div className="Hand">
+						{imageCardsContent}
 				</div>
 				<div className="Footer">
 					<h3>Debug:</h3>
