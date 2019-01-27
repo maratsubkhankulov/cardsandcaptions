@@ -42,6 +42,7 @@ function setup() {
 }
 
 function countTurns() {
+/*
 	let game = new Game();
 
 	game.addPlayer(player1);
@@ -62,6 +63,7 @@ function countTurns() {
 	}
 
 	console.assert(game.turn_number == Game.maxTurns());
+*/
 }
 
 function multiPlayerGame() {
@@ -99,21 +101,32 @@ function playATurn() {
   game.revealCaptionCard(judge);
 
 	// Voters play cards, judge collects cards
-	game.playImageCard(player2, 0);
-	game.playImageCard(player3, 3);
+	let image_stack_size = game.image_stack.length;
 
-	console.assert(judge.playedCards.length == 2, "Expected 2 cards to be played");
+	game.voteImageCard(player2, 0);
+	game.voteImageCard(player3, 3);
+
+	console.assert(judge.votes.length == 2, "Expected 2 cards to be played");
 
 	// Judge chooses winning card
-	game.chooseWinningCard(judge, judge.playedCards[1]);
+	console.log(judge.votes);
+	let winner = game.chooseWinningCard(judge, judge.votes[1]);
 
 	// Assert:
-	// - winner took the winning caption card
-	// - unused cards went to the bottom of the image stack
+	console.assert(winner === player3, `Unexpected winner Player(${winner.name})`);
+	
+	console.assert(image_stack_size + 2 == game.image_stack.length, `Cards were not replaced onto the stack. Expected ${image_stack_size}, got ${game.image_stack.length}.`);
+
+	console.assert(judge.votes.length == 0, "Expected votes to be cleared");
 
 	// End of turn
-	// Assert:
-	// - nobody is judge
-	// - players have refilled their hands
+	game.endTurn();
+
+	console.assert(game.currentJudge == -1);
+	// Players have refilled their hands
+	for (var i = 0; i < game.players; i++) {
+		let player = game.players[i];
+		console.assert(player.hasFullHand());
+	}
 }
 
