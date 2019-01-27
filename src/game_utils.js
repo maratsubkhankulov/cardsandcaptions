@@ -10,26 +10,26 @@ export function fillCardStacks(game) {
 	game.addCaptionCard(new CaptionCard(7, "Caption 7"));
 	game.addCaptionCard(new CaptionCard(8, "Caption 8"));
 
-	game.addImageCard(new ImageCard(1, "img1"));
-	game.addImageCard(new ImageCard(2, "img2"));
-	game.addImageCard(new ImageCard(3, "img3"));
-	game.addImageCard(new ImageCard(4, "img4"));
-	game.addImageCard(new ImageCard(5, "img5"));
-	game.addImageCard(new ImageCard(6, "img6"));
-	game.addImageCard(new ImageCard(7, "img7"));
-	game.addImageCard(new ImageCard(8, "img8"));
-	game.addImageCard(new ImageCard(9, "img8"));
-	game.addImageCard(new ImageCard(10, "img10"));
-	game.addImageCard(new ImageCard(11, "img11"));
-	game.addImageCard(new ImageCard(12, "img12"));
-	game.addImageCard(new ImageCard(13, "img13"));
-	game.addImageCard(new ImageCard(14, "img14"));
-	game.addImageCard(new ImageCard(15, "img15"));
-	game.addImageCard(new ImageCard(16, "img16"));
-	game.addImageCard(new ImageCard(17, "img17"));
-	game.addImageCard(new ImageCard(18, "img18"));
-	game.addImageCard(new ImageCard(19, "img19"));
-	game.addImageCard(new ImageCard(20, "img20"));
+	game.addImageCard(new ImageCard(1, "1.jpg"));
+	game.addImageCard(new ImageCard(2, "2.jpg"));
+	game.addImageCard(new ImageCard(3, "3.jpg"));
+	game.addImageCard(new ImageCard(4, "4.jpg"));
+	game.addImageCard(new ImageCard(5, "5.jpg"));
+	game.addImageCard(new ImageCard(6, "6.jpg"));
+	game.addImageCard(new ImageCard(7, "7.jpg"));
+	game.addImageCard(new ImageCard(8, "8.jpg"));
+	game.addImageCard(new ImageCard(9, "1.jpg"));
+	game.addImageCard(new ImageCard(10, "2.jpg"));
+	game.addImageCard(new ImageCard(11, "3.jpg"));
+	game.addImageCard(new ImageCard(12, "4.jpg"));
+	game.addImageCard(new ImageCard(13, "5.jpg"));
+	game.addImageCard(new ImageCard(14, "6.jpg"));
+	game.addImageCard(new ImageCard(15, "7.jpg"));
+	game.addImageCard(new ImageCard(16, "8.jpg"));
+	game.addImageCard(new ImageCard(17, "1.jpg"));
+	game.addImageCard(new ImageCard(18, "2.jpg"));
+	game.addImageCard(new ImageCard(19, "3.jpg"));
+	game.addImageCard(new ImageCard(20, "4.jpg"));
 }
 
 export function fillPlayers(game) {

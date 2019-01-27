@@ -3,7 +3,7 @@ import './GameView.css';
 import { Game } from './game';
 import { fillCardStacks, fillPlayers } from './game_utils';
 
-import wonka from './img/wonka.jpg';
+import wonka from './img/1.jpg';
 
 let game = new Game();
 
