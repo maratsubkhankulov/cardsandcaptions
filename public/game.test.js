@@ -6,17 +6,17 @@ export function runTests() {
 
 	let tests = [
 		{
-			name: "Count turns",
-			func: countTurns,
-		},
-		{
 			name: "Create a multi player game",
 			func: multiPlayerGame,
 		},
 		{
 			name: "Play a full turn",
 			//collect caption card, collect plays, select and award winning card.",
-			func: playATurn,
+			func: playTurn,
+		},
+		{
+			name: "Play a full game",
+			func: playGame,
 		},
 	]
 
@@ -41,31 +41,6 @@ function setup() {
 	player3 = new Player("Alice");
 }
 
-function countTurns() {
-/*
-	let game = new Game();
-
-	game.addPlayer(player1);
-
-	console.assert(game.turn_number == 0, game); 
-
-	fillCardStacks(game);
-	game.startGame();
-
-	for (var i = 0; i < Game.maxTurns(); i++) {
-		console.assert(game.turn_number == i + 1, game.turn_number, i);
-
-		game.collectVotes();
-		game.decideWinner();
-		game.startNextTurn();
-
-		// is game over?
-	}
-
-	console.assert(game.turn_number == Game.maxTurns());
-*/
-}
-
 function multiPlayerGame() {
 	let game = new Game();
 
@@ -76,7 +51,7 @@ function multiPlayerGame() {
 	console.log(game.players.length == 3, game.players);
 }
 
-function playATurn() {
+function playTurn() {
 	let game = new Game();
 
 	game.addPlayer(player1);
@@ -112,7 +87,6 @@ function playATurn() {
 	console.log(judge.votes);
 	let winner = game.chooseWinningCard(judge, judge.votes[1]);
 
-	// Assert:
 	console.assert(winner === player3, `Unexpected winner Player(${winner.name})`);
 	
 	console.assert(image_stack_size + 2 == game.image_stack.length, `Cards were not replaced onto the stack. Expected ${image_stack_size}, got ${game.image_stack.length}.`);
@@ -123,6 +97,7 @@ function playATurn() {
 	game.endTurn();
 
 	console.assert(game.currentJudge == -1);
+
 	// Players have refilled their hands
 	for (var i = 0; i < game.players; i++) {
 		let player = game.players[i];
@@ -130,3 +105,6 @@ function playATurn() {
 	}
 }
 
+function playGame() {
+
+}
