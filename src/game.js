@@ -19,7 +19,7 @@ export class Player {
 	}
 
 	takeCaptionCard(card) {
-		console.assert(this.captionCar === null);
+		console.assert(this.captionCard === null);
 		this.captionCard = card;
 	}
 

@@ -62,7 +62,7 @@ describe('Full turn', () => {
 
 		console.assert(winner === player3, `Unexpected winner Player(${winner.name})`);
 		
-		console.assert(image_stack_size + 2 == game.image_stack.length, `Cards were not replaced onto the stack. Expected ${image_stack_size}, got ${game.image_stack.length}.`);
+		expect(game.image_stack.length).toBe(image_stack_size + 2);
 
 		console.assert(judge.votes.length == 0, "Expected votes to be cleared");
 
