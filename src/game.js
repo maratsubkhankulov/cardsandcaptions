@@ -154,6 +154,10 @@ export class Game {
 		return judge.votes.length === this.players.length - 1;
 	}
 
+	getState() {
+		return StateToString(this.state);
+	}
+
   // System actions
 	changeState(action) {
 		if (action === undefined) {
