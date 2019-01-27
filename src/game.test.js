@@ -1,5 +1,5 @@
 import {Game, Player, CaptionCard} from './game.js';
-import {fillCardStacks} from './game_room.js';
+import {fillCardStacks} from './game_utils.js';
 
 let player1 = null;
 let player2 = null;

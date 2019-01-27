@@ -130,6 +130,10 @@ export class Game {
 		this.currentJudge = -1;
 	}
 
+	getPlayer(id) {
+		return this.players[id];
+	}
+
 	getCurrentJudge() {
 		console.assert(this.currentJudge >= 0 && this.currentJudge < this.players.length, `Invalid current judge index ${this.currentJudge}`);
 		return this.players[this.currentJudge];

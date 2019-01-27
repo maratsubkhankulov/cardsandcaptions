@@ -1,4 +1,4 @@
-import {CaptionCard, ImageCard} from './game.js';
+import {CaptionCard, ImageCard, Player} from './game.js';
 
 export function fillCardStacks(game) {
 	game.addCaptionCard(new CaptionCard(1, "Caption 1"));
@@ -32,3 +32,8 @@ export function fillCardStacks(game) {
 	game.addImageCard(new ImageCard(20, "img20"));
 }
 
+export function fillPlayers(game) {
+	game.addPlayer(new Player("Steven"));
+	game.addPlayer(new Player("Jack"));
+	game.addPlayer(new Player("Alice"));
+}
