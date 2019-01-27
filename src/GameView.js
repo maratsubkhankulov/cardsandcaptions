@@ -27,13 +27,29 @@ class GameView extends Component {
 	}
 
 	selectPlayer(id, name) {
-		console.log(`Select player ${name}`);
-		this.state.activePlayer = game.getPlayer(id);
+		this.setState(
+			(state, props) => {
+				return {activePlayer: game.getPlayer(id)};
+			},
+			() => {
+				console.log(`Selected player ${this.state.activePlayer.name}`);
+			});
+	}
+
+	isActivePlayer(id) {
+		return this.state.activePlayer && this.state.activePlayer.id === id
 	}
 
   render() {
+		console.log("Render GameView");
 		const players = game.players;
-		const playerItems = players.map((p) => <b onClick={() => this.selectPlayer(p.id, p.name)} key={p.id}> {p.name} </b>);
+		const playerItems = players.map((p) => {
+				if (this.isActivePlayer(p.id)) {
+					return <b className="PlayerSelected" key={p.id}> {p.name} </b>;
+				} else {
+					return <b onClick={() => this.selectPlayer(p.id, p.name)} key={p.id}> {p.name} </b>;
+				}
+			});
     return (
       <div className="Game">
 				<div className="PlayerPanel">

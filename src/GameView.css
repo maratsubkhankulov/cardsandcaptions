@@ -1,3 +1,7 @@
 .PlayerPanel {
   background-color: #00bbbb;
 }
+
+.PlayerSelected {
+	text-decoration: underline;
+}
