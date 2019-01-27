@@ -23,12 +23,12 @@ export function runTests() {
 	for (var i = 0; i < tests.length; i++) {
 		setup();
 
-		console.log(`Test ${i}: ${tests[i].name}`);
+		console.log(`# Test ${i}: ${tests[i].name}`);
 		tests[i].func();
-		console.log("Test complete");
+		console.log("# Test complete");
 	}
 
-	console.log("Tests complete");
+	console.log("## Tests complete");
 }
 
 let player1 = null;
@@ -82,10 +82,38 @@ function playATurn() {
 	game.addPlayer(player3);
 
 	fillCardStacks(game); 
+	game.playersFillHands();
+
+	for (var i = 0; i < game.players.length; i++) {
+		let player = game.players[i];
+		console.assert(player.hand.length == Player.maxHandSize(),
+			`Player(${player.name}) hand should be full. Has ${player.hand.length} cards.`);
+	}
+
 	game.startGame();
 
 	let judge = game.getCurrentJudge();
 	console.assert(judge.name === player1.name);
 	game.collectCaptionCard(judge);
+
+  game.revealCaptionCard(judge);
+
+	// Voters play cards, judge collects cards
+	game.playImageCard(player2, 0);
+	game.playImageCard(player3, 3);
+
+	console.assert(judge.playedCards.length == 2, "Expected 2 cards to be played");
+
+	// Judge chooses winning card
+	game.chooseWinningCard(judge, judge.playedCards[1]);
+
+	// Assert:
+	// - winner took the winning caption card
+	// - unused cards went to the bottom of the image stack
+
+	// End of turn
+	// Assert:
+	// - nobody is judge
+	// - players have refilled their hands
 }
 
