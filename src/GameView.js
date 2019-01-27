@@ -56,6 +56,7 @@ class GameView extends Component {
 					{playerItems}
 				</div>
 				<div className="Caption">
+					Caption area
 					<div className="card">
 						This is a caption
 					</div>
