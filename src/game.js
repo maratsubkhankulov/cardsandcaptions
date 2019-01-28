@@ -40,14 +40,15 @@ export class Player {
 		this.votes = [];
 	}
 
-	removeCardFromHand(index) {
-		if (index >= 0 && index < this.hand.length) {
-			let card = this.hand[index];
-			this.hand.splice(index, 1);
-			return card;
+	removeCardFromHand(id) {
+		for (var i = 0; i < this.hand.length; i++) {
+			let card = this.hand[i];
+			if (card.id === id) {
+				this.hand.splice(i, 1);
+				return card;
+			}
 		}
-		console.error(`Invalid card number ${index}`);
-		return null;
+		throw `Asking to remove non-existent Card(${id})`;
 	}
 
 	takePoint(card) {
@@ -131,7 +132,18 @@ export class Game {
 	}
 
 	getPlayer(id) {
-		return this.players[id];
+		console.log(`Get player by id ${id}`);
+		for (var i = 0; i < this.players.length; i++) {
+			let player = this.players[i];
+			if (player.id === id) {
+				return player;
+			}
+		}
+		return null;
+	}
+
+	existsJudge() {
+		return this.currentJudge >= 0 && this.currentJudge < this.players.length;
 	}
 
 	getCurrentJudge() {
@@ -240,10 +252,10 @@ export class Game {
 		this.changeState(ActionEnum.SHOW_CAPTION);
 	}
 
-	voteImageCard(voter, cardNumber) {
+	voteImageCard(voter, cardId) {
 		console.assert(this.state === StateEnum.WAIT_FOR_VOTERS);
 		console.assert(voter.hand.length === Player.maxHandSize());
-		let card = voter.removeCardFromHand(cardNumber);
+		let card = voter.removeCardFromHand(cardId);
 		console.assert(voter.hand.length === Player.maxHandSize() - 1);
 
 		let judge = this.getCurrentJudge();

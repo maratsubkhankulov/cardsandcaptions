@@ -51,8 +51,8 @@ describe('Full turn', () => {
 		// Voters play cards, judge collects cards
 		let image_stack_size = game.image_stack.length;
 
-		game.voteImageCard(player2, 0);
-		game.voteImageCard(player3, 3);
+		game.voteImageCard(player2, player2.hand[0]);
+		game.voteImageCard(player3, player3.hand[3]);
 
 		console.assert(judge.votes.length == 2, "Expected 2 cards to be played");
 

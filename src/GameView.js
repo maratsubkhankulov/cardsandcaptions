@@ -13,8 +13,11 @@ fillCardStacks(game);
 //TODO  remove - testing only
 fillPlayers(game);
 game.playersFillHands();
-
 game.startGame();
+
+let judge = game.getCurrentJudge();
+game.collectCaptionCard(judge);
+game.revealCaptionCard(judge);
 
 class GameView extends Component {
 	constructor(props) {
@@ -25,7 +28,10 @@ class GameView extends Component {
 	}
 
 	selectImageCard(id) {
-		alert(`Image card(${id}) selected`);
+		if (!this.state.activePlayer) {
+			throw "No active player, can't select card."
+		}
+		game.voteImageCard(this.state.activePlayer, id);
 	}
 
 	selectPlayer(id, name) {
@@ -49,7 +55,7 @@ class GameView extends Component {
 				if (this.isActivePlayer(p.id)) {
 					return <b className="PlayerSelected" key={p.id}> {p.name} </b>;
 				} else {
-					return <b onClick={() => this.selectPlayer(p.id, p.name)} key={p.id}> {p.name} </b>;
+					return <b onClick={() => this.selectPlayer(p.id, p.name)} key={p.id}> {p.name}({p.id}) </b>;
 				}
 			});
 
@@ -57,8 +63,8 @@ class GameView extends Component {
 		if (this.state.activePlayer) {
 			const hand = this.state.activePlayer.hand;
 			imageCardsContent = hand.map((card) => (
-					<div className="card" onClick={() => this.selectImageCard(card.id)}>
-						<img src={card.img} key={card.id} className="card" alt={card.id} />
+					<div key={card.id} className="card" onClick={() => this.selectImageCard(card.id)}>
+						<img src={card.img} className="card" alt={card.id} />
 					</div>
 				)
 			);
@@ -69,9 +75,8 @@ class GameView extends Component {
 					{playerItems}
 				</div>
 				<div className="CaptionArea">
-					Caption area
 					<div className="card">
-						This is a caption
+						{game.existsJudge() ? game.getCurrentJudge().captionCard.caption : "no caption"}
 					</div>
 				</div>
 				<div className="Hand">
