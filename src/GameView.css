@@ -9,6 +9,17 @@
 .CaptionArea {
 	background-color: #aaffaa;
 	height: 300px;
+	margin: 5px;
+}
+
+.Table {
+	background-color: #aaaaff;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+  color: #444;
+	min-height: 100px;
+	margin: 5px;
 }
 
 .Hand {
@@ -17,6 +28,7 @@
   grid-gap: 10px;
 	background-color: #ffaaaa;
   color: #444;
+	margin: 5px;
 }
 
 div.card {

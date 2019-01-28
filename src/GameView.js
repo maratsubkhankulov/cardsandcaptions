@@ -24,6 +24,10 @@ class GameView extends Component {
 		super(props);
 		this.state = {
 			activePlayer: null,
+			players: [],
+			caption: null,
+			hand: [],
+			table: [],
 		}
 	}
 
@@ -32,6 +36,10 @@ class GameView extends Component {
 			throw "No active player, can't select card."
 		}
 		game.voteImageCard(this.state.activePlayer, id);
+	}
+
+	selectWinningCard(vote) {
+		alert(`Select Card(${vote.card.id}) by Player(${vote.player.name})`)
 	}
 
 	selectPlayer(id, name) {
@@ -69,6 +77,17 @@ class GameView extends Component {
 				)
 			);
 		}
+
+		let tableContent = "Empty table";
+		if (game.existsJudge()) {
+			const judge = game.getCurrentJudge();
+			tableContent = judge.votes.map((vote) => (
+					<div key={vote.card.id} className="card" onClick={() => this.selectWinningCard(vote)}>
+						<img src={vote.card.img} className="card" alt={vote.card.id} />
+					</div>
+				)
+			);
+		}
     return (
       <div className="Game">
 				<div className="PlayerPanel">
@@ -78,6 +97,9 @@ class GameView extends Component {
 					<div className="card">
 						{game.existsJudge() ? game.getCurrentJudge().captionCard.caption : "no caption"}
 					</div>
+				</div>
+				<div className="Table">
+						{tableContent}
 				</div>
 				<div className="Hand">
 						{imageCardsContent}
