@@ -19,3 +19,5 @@ https://dev.to/abvishek/publish-react-appcreate-react-app-on-facebook-instant-ga
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 https://gridbyexample.com/examples/example1/
+
+https://developers.facebook.com/docs/games/instant-games/getting-started/quickstart/#app-setup
