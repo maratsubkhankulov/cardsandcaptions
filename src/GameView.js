@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './GameView.css';
-import { Game } from './game';
+import { Game, Vote } from './game';
 import { fillCardStacks, fillPlayers } from './game_utils';
 
 // Import static images
@@ -28,6 +28,7 @@ class GameView extends Component {
 			caption: null,
 			hand: [],
 			table: [],
+			votes: [],
 		}
 	}
 
@@ -36,10 +37,25 @@ class GameView extends Component {
 			throw "No active player, can't select card."
 		}
 		game.voteImageCard(this.state.activePlayer, id);
+		this.setState(
+			(state, props) => {
+				let newVotes = this.state.votes.concat(new Vote(this.state.activePlayer, id));
+				return { votes: newVotes };
+			},
+			() => {
+				console.log(`State: winningPlayer`);
+			});
 	}
 
 	selectWinningCard(vote) {
-		alert(`Select Card(${vote.card.id}) by Player(${vote.player.name})`)
+		// TODO remove alert(`Select Card(${vote.card.id}) by Player(${vote.player.name})`)
+		this.setState(
+			(state, props) => {
+				return { winningPlayer: vote.player }
+			},
+			() => {
+				console.log(`State: winningPlayer`);
+			});
 	}
 
 	selectPlayer(id, name) {

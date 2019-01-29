@@ -1,6 +1,6 @@
 let player_counter = 0; 
 
-class Vote {
+export class Vote {
 	constructor(player, card) {
 		this.player = player;
 		this.card = card;
