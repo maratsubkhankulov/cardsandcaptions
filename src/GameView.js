@@ -48,9 +48,10 @@ class GameView extends Component {
 	}
 
 	selectWinningCard(vote) {
+		console.log("selectWinningCard()");
+		let winningPlayer = game.chooseWinningCard(game.getCurrentJudge(), vote);
 		this.setState(
 			(state, props) => {
-				let winningPlayer = game.chooseWinningCard(vote.player, vote.card);
 				return { winningPlayer: winningPlayer }
 			},
 			() => {
@@ -80,7 +81,7 @@ class GameView extends Component {
 				if (this.isActivePlayer(p.id)) {
 					return <b className="PlayerSelected" key={p.id}> {p.name} </b>;
 				} else {
-					return <b onClick={() => this.selectPlayer(p.id, p.name)} key={p.id}> {p.name}({p.id}) </b>;
+					return <b onClick={() => this.selectPlayer(p.id, p.name)} key={p.id}> {p.name}({p.points.length}) </b>;
 				}
 			});
 
@@ -112,7 +113,7 @@ class GameView extends Component {
 				</div>
 				<div className="CaptionArea">
 					<div className="card">
-						{game.existsJudge() ? game.getCurrentJudge().captionCard.caption : "no caption"}
+						{ game.existsJudge() && game.getCurrentJudge().captionCard ? game.getCurrentJudge().captionCard.caption : "no caption"}
 					</div>
 				</div>
 				<div className="Table">
