@@ -81,15 +81,30 @@ class GameView extends Component {
 		return this.state.activePlayer && this.state.activePlayer.id === id
 	}
 
+	isJudgePlayer(id) {
+		if (game.existsJudge()) {
+		 	return game.getCurrentJudge().id === id;
+		}
+		return false;
+	}
+
   render() {
 		console.log("Render GameView");
 		const players = game.players;
 		const playerItems = players.map((p) => {
-				if (this.isActivePlayer(p.id)) {
-					return <b className="PlayerSelected" key={p.id}> {p.name} </b>;
-				} else {
-					return <b onClick={() => this.selectPlayer(p.id, p.name)} key={p.id}> {p.name}({p.points.length}) </b>;
-				}
+				let isActive = this.isActivePlayer(p.id);
+				let isJudge = this.isJudgePlayer(p.id);
+				let className = `${isActive ? "PlayerSelected":""} ${isJudge ? "JudgeSelected":""}`;
+				let onClick=isActive ? null : () => this.selectPlayer(p.id, p.name)
+					return (
+						<b
+							className={className}
+							onClick={onClick}
+							key={p.id}
+						>
+								{p.name}({p.points.length})
+						</b>
+					)
 			});
 
 		let imageCardsContent = "Not an active player";

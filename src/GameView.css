@@ -1,9 +1,15 @@
 .PlayerPanel {
   background-color: #00bbbb;
+	min-height: 40;
+	padding: 5px;
 }
 
 .PlayerSelected {
 	text-decoration: underline;
+}
+
+.JudgeSelected {
+	text-decoration: overline;
 }
 
 .CaptionArea {
