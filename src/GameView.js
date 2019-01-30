@@ -50,13 +50,20 @@ class GameView extends Component {
 	selectWinningCard(vote) {
 		console.log("selectWinningCard()");
 		let winningPlayer = game.chooseWinningCard(game.getCurrentJudge(), vote);
+		game.endTurn();
+		game.playersFillHands();
+		game.startGame();
+
+		let judge = game.getCurrentJudge();
+		game.collectCaptionCard(judge);
+		game.revealCaptionCard(judge);
+
 		this.setState(
 			(state, props) => {
 				return { winningPlayer: winningPlayer }
 			},
 			() => {
-				console.log(`State: winningPlayer`);
-				game.endTurn();
+				console.log(`State: ${game.getState()}`);
 			});
 	}
 
