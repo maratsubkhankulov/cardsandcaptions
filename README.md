@@ -19,3 +19,5 @@ https://dev.to/abvishek/publish-react-appcreate-react-app-on-facebook-instant-ga
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 https://gridbyexample.com/examples/example1/
+
+https://www.w3schools.com/howto/howto_css_flip_card.asp

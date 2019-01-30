@@ -43,18 +43,19 @@ class GameView extends Component {
 				return { votes: newVotes };
 			},
 			() => {
-				console.log(`State: winningPlayer`);
+				console.log(`Vote occurred.`);
 			});
 	}
 
 	selectWinningCard(vote) {
-		// TODO remove alert(`Select Card(${vote.card.id}) by Player(${vote.player.name})`)
 		this.setState(
 			(state, props) => {
-				return { winningPlayer: vote.player }
+				let winningPlayer = game.chooseWinningCard(vote.player, vote.card);
+				return { winningPlayer: winningPlayer }
 			},
 			() => {
 				console.log(`State: winningPlayer`);
+				game.endTurn();
 			});
 	}
 
