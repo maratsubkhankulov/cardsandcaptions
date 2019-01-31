@@ -119,7 +119,7 @@ transitions[StateEnum.END_OF_GAME][ActionEnum.START] = StateEnum.WAIT_FOR_VOTERS
 
 export class Game {
 	static maxTurns() { return (Game.maxPlayers() - 1) * Game.maxScore() + 1; }
-	static maxScore() { return 5; }
+	static maxScore() { return 1; }
 	static maxPlayers() { return 5; }
 
 	constructor() {
@@ -197,7 +197,7 @@ export class Game {
 
 		// Elect first judge
 		console.assert(this.players.length > 0, "Can't start game with no players");
-		this.currentJudge = 0;
+		this.currentJudge = (this.currentJudge + 1) % this.players.length;
 	}
 
 	collectVotes() {
@@ -206,14 +206,12 @@ export class Game {
 
 	endTurn() {
 		this.changeState(ActionEnum.JUDGE);
-		this.clearJudge();
 		this.playersFillHands();
+		this.turn_number += 1;
 	}
 
 	startNextTurn() {
-		if (this.turn_number < Game.maxTurns()) {
-			this.turn_number += 1;
-		}
+		this.turn_number += 1;
 	}
 
 	clearJudge() {
@@ -227,6 +225,16 @@ export class Game {
 			let card = this.image_stack.pop();
 			player.takeImageCard(card);
 		}
+	}
+
+	isGameOver() {
+		for (let i = 0; i < this.players.length; i++) {
+			let player = this.players[i];
+			if (player.countPoints() >= Game.maxPoints()) {
+				return true;
+			}
+		}
+		return this.turn_number > Game.MAX_TURNS;
 	}
 
 	// Player actions in the game

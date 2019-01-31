@@ -6,22 +6,12 @@ import { fillCardStacks, fillPlayers } from './game_utils';
 // Import static images
 require.context('../public/img', true);
 
-let game = new Game();
-
-fillCardStacks(game);
-
-//TODO  remove - testing only
-fillPlayers(game);
-game.playersFillHands();
-game.startGame();
-
-let judge = game.getCurrentJudge();
-game.collectCaptionCard(judge);
-game.revealCaptionCard(judge);
-
 class GameView extends Component {
 	constructor(props) {
 		super(props);
+
+		this.initGame();
+
 		this.state = {
 			activePlayer: null,
 			players: [],
@@ -32,11 +22,26 @@ class GameView extends Component {
 		}
 	}
 
+	initGame() {
+		this.game = new Game();
+
+		fillCardStacks(this.game);
+
+		fillPlayers(this.game);
+		this.game.playersFillHands();
+		this.game.startGame();
+
+		let judge = this.game.getCurrentJudge();
+		this.game.collectCaptionCard(judge);
+		this.game.revealCaptionCard(judge);
+		this.selectPlayer(this.game.players[0].id);
+	}
+
 	selectImageCard(id) {
 		if (!this.state.activePlayer) {
 			throw "No active player, can't select card."
 		}
-		game.voteImageCard(this.state.activePlayer, id);
+		this.game.voteImageCard(this.state.activePlayer, id);
 		this.setState(
 			(state, props) => {
 				let newVotes = this.state.votes.concat(new Vote(this.state.activePlayer, id));
@@ -49,28 +54,36 @@ class GameView extends Component {
 
 	selectWinningCard(vote) {
 		console.log("selectWinningCard()");
-		let winningPlayer = game.chooseWinningCard(game.getCurrentJudge(), vote);
-		game.endTurn();
-		game.playersFillHands();
-		game.startGame();
+		let winningPlayer = this.game.chooseWinningCard(this.game.getCurrentJudge(), vote);
+		if (winningPlayer.points.length >= Game.maxScore()) {
+			alert(`Winner: ${winningPlayer.name}!`);
+			this.initGame();
+			return;
+		}
 
-		let judge = game.getCurrentJudge();
-		game.collectCaptionCard(judge);
-		game.revealCaptionCard(judge);
+		this.game.endTurn();
+
+		this.game.startGame();
+		this.game.playersFillHands();
+
+		let judge = this.game.getCurrentJudge();
+		this.game.collectCaptionCard(judge);
+		this.game.revealCaptionCard(judge);
+
 
 		this.setState(
 			(state, props) => {
 				return { winningPlayer: winningPlayer }
 			},
 			() => {
-				console.log(`State: ${game.getState()}`);
+				console.log(`State: ${this.game.getState()}`);
 			});
 	}
 
-	selectPlayer(id, name) {
+	selectPlayer(id) {
 		this.setState(
 			(state, props) => {
-				return {activePlayer: game.getPlayer(id)};
+				return {activePlayer: this.game.getPlayer(id)};
 			},
 			() => {
 				console.log(`Selected player ${this.state.activePlayer.name}`);
@@ -82,15 +95,15 @@ class GameView extends Component {
 	}
 
 	isJudgePlayer(id) {
-		if (game.existsJudge()) {
-		 	return game.getCurrentJudge().id === id;
+		if (this.game.existsJudge()) {
+		 	return this.game.getCurrentJudge().id === id;
 		}
 		return false;
 	}
 
   render() {
 		console.log("Render GameView");
-		const players = game.players;
+		const players = this.game.players;
 		const playerItems = players.map((p) => {
 				let isActive = this.isActivePlayer(p.id);
 				let isJudge = this.isJudgePlayer(p.id);
@@ -119,8 +132,8 @@ class GameView extends Component {
 		}
 
 		let tableContent = "Empty table";
-		if (game.existsJudge()) {
-			const judge = game.getCurrentJudge();
+		if (this.game.existsJudge()) {
+			const judge = this.game.getCurrentJudge();
 			tableContent = judge.votes.map((vote) => (
 					<div key={vote.card.id} className="card" onClick={() => this.selectWinningCard(vote)}>
 						<img src={vote.card.img} className="card" alt={vote.card.id} />
@@ -135,7 +148,7 @@ class GameView extends Component {
 				</div>
 				<div className="CaptionArea">
 					<div className="card">
-						{ game.existsJudge() && game.getCurrentJudge().captionCard ? game.getCurrentJudge().captionCard.caption : "no caption"}
+						{ this.game.existsJudge() && this.game.getCurrentJudge().captionCard ? this.game.getCurrentJudge().captionCard.caption : "no caption"}
 					</div>
 				</div>
 				<div className="Table">
@@ -147,9 +160,9 @@ class GameView extends Component {
 				<div className="Footer">
 					<h3>Debug:</h3>
 					<p>
-						State: {game.getState()}
+						State: {this.game.getState()}
 					</p>
-					# Players: {game.players.length} Caption stack: {game.caption_stack.length} Image stack: {game.image_stack.length} Turn number: {game.turn_number} Current judge: {game.currentJudge}
+					# Players: {this.game.players.length} Caption stack: {this.game.caption_stack.length} Image stack: {this.game.image_stack.length} Turn number: {this.game.turn_number} Current judge: {this.game.currentJudge}
 				</div>
       </div>
     );
