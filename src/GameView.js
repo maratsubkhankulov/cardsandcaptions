@@ -62,6 +62,10 @@ class GameView extends Component {
 			return;
 		}
 		console.log("selectWinningCard()");
+		if (!this.game.canChooseWinningCard()) {
+			console.error("Cannot choose winning card right now");
+			return;
+		}
 		let winningPlayer = this.game.chooseWinningCard(this.game.getCurrentJudge(), vote);
 		if (winningPlayer.points.length >= Game.maxScore()) {
 			alert(`Winner: ${winningPlayer.name}!`);

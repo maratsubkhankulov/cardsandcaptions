@@ -311,8 +311,18 @@ export class Game {
 		}
 	}
 
+	canChooseWinningCard() {
+		if (this.state !== StateEnum.WAIT_FOR_JUDGMENT) {
+			console.error(`Unexpected state: ${StateToString(this.state)}`);
+			return false;
+		}
+		return true;
+	}
+
 	chooseWinningCard(judge, vote) {
-		console.assert(this.state === StateEnum.WAIT_FOR_JUDGMENT, `Unexpected state: ${StateToString(this.state)}`);
+		if (!this.canChooseWinningCard()) {
+			return null;
+		}
 		console.log(`Judge(${judge.name}) chose winning Card(${vote.card.img})`);
 		console.log(`CaptionCard(${judge.captionCard.caption}) goes to Player(${vote.player.name})`);
 
