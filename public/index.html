@@ -28,27 +28,49 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 		<script>
-				console.log("Init FBInstant...");
-				window.onload = function () {
-						FBInstant.initializeAsync().then(function () {
-								function loadScript() {
-										return new Promise(function (resolve, reject) {
-												/*
-												var s;
-												s = document.createElement('script');
-												s.src = "static/js/main.34f1754e.js";
-												s.onload = resolve;
-												s.onerror = reject;
-												document.head.appendChild(s);
-												*/
-												console.log("Initialized FBInstant");
-										});
-								}
-								loadScript().then(res => console.log(res)).catch(err => console.log(err));
-						}).catch(err => {
-								console.log(err)
-						});
-				};
+		function loadScript() {
+				console.log("loadScript");
+				return new Promise(function (resolve, reject) {
+						var chunks = ["static/js/1.f739feb7.chunk.js", "static/js/main.0967f703.chunk.js"];
+						for (var i = 0; i < chunks.length; i++) {
+							var s;
+							var progress = ((i+1)/chunks.length) * 100;
+							s = document.createElement('script');
+							s.src = chunks[i];
+							s.onload = resolve;
+							s.onerror = reject;
+							document.head.appendChild(s);
+							FBInstant.setLoadingProgress(progress);
+						}
+						console.log("Finished loading");
+						FBInstant.startGameAsync()
+							.then(function() {
+								// Retrieving context and player information can only be done
+								// once startGameAsync() resolves
+								var contextId = FBInstant.context.getID();
+								var contextType = FBInstant.context.getType();
+
+								var playerName = FBInstant.player.getName();
+								var playerPic = FBInstant.player.getPhoto();
+								var playerId = FBInstant.player.getID();
+
+								// Once startGameAsync() resolves it also means the loading view has 
+								// been removed and the user can see the game viewport
+
+								console.log(playerName);
+							});
+				});
+		}
+		//loadScript().then(res => console.log(res)).catch(err => console.log(err));
+		window.onload = function () {
+				console.log("wondow.onload");
+				FBInstant.initializeAsync().then(function () {
+						console.log("initializeSyn");
+						loadScript().then(res => console.log(res)).catch(err => console.log(err));
+				}).catch(err => {
+						console.log(err)
+				});
+		}
 		</script>
     <div id="root"></div>
     <!--

@@ -6,7 +6,13 @@ It's like Cards Against Humanity, but with memes.
 
 `npm start`
 
-# Testing
+# Testing in browser
+
+1. Launch server in ./build: `http-server --ssl -c-1 -p 8080 -a 127.0.0.1`
+2. [https://www.facebook.com/embed/instantgames/1158740410961532/player?game_url=https%3A%2F%2Flocalhost%3A8080][open app in browser]
+ 
+
+# Unit testing
 
 `npm test`
 
