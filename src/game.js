@@ -54,6 +54,16 @@ export class Player {
 	takePoint(card) {
 		this.points.push(card);
 	}
+
+	hasPlayerVoted(voter) {
+		for (let i = 0; i < this.votes; i++) {
+			let v = this.votes[i];
+			if (v.player.id === voter.id) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 export class CaptionCard {
@@ -119,7 +129,7 @@ transitions[StateEnum.END_OF_GAME][ActionEnum.START] = StateEnum.WAIT_FOR_VOTERS
 
 export class Game {
 	static maxTurns() { return (Game.maxPlayers() - 1) * Game.maxScore() + 1; }
-	static maxScore() { return 1; }
+	static maxScore() { return 5; }
 	static maxPlayers() { return 5; }
 
 	constructor() {
@@ -260,14 +270,37 @@ export class Game {
 		this.changeState(ActionEnum.SHOW_CAPTION);
 	}
 
+	canPlayerVote(voter) {
+		if (this.state !== StateEnum.WAIT_FOR_VOTERS) {
+			console.log("Not waiting for voters");
+			return false;
+		}
+		if (voter.hand.length !== Player.maxHandSize()) {
+			console.log("Player appears to have voted");
+			return false;
+		}
+
+		let judge = this.getCurrentJudge();
+		if (judge.hasPlayerVoted(voter)) {
+			console.log("Cannot vote twice");
+			return false;
+		}
+	
+		if (judge.id === voter.id) {
+			console.log("Judge cannot vote");
+			return false;
+		}
+		return true;
+	}
+
 	voteImageCard(voter, cardId) {
-		console.assert(this.state === StateEnum.WAIT_FOR_VOTERS);
-		console.assert(voter.hand.length === Player.maxHandSize());
+		if (!this.canPlayerVote(voter)) {
+			return;
+		}
+		let judge = this.getCurrentJudge();
 		let card = voter.removeCardFromHand(cardId);
 		console.assert(voter.hand.length === Player.maxHandSize() - 1);
 
-		let judge = this.getCurrentJudge();
-		console.assert(!(judge.name === voter.name), "Judge cannot vote an image card");
 		let numVotes = judge.votes.length;
 		judge.takeVotedImageCard(voter,card);
 		console.assert(judge.votes.length === numVotes + 1);

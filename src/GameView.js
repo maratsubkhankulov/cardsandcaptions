@@ -41,6 +41,10 @@ class GameView extends Component {
 		if (!this.state.activePlayer) {
 			throw "No active player, can't select card."
 		}
+		if (!this.game.canPlayerVote(this.state.activePlayer)) {
+			console.error("This player cannot vote");
+			return;
+		}
 		this.game.voteImageCard(this.state.activePlayer, id);
 		this.setState(
 			(state, props) => {
@@ -53,6 +57,10 @@ class GameView extends Component {
 	}
 
 	selectWinningCard(vote) {
+		if (this.game.getCurrentJudge().id !== this.state.activePlayer.id) {
+			console.error("Only the judge can select the winner");
+			return;
+		}
 		console.log("selectWinningCard()");
 		let winningPlayer = this.game.chooseWinningCard(this.game.getCurrentJudge(), vote);
 		if (winningPlayer.points.length >= Game.maxScore()) {
