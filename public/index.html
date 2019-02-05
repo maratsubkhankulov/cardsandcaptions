@@ -23,7 +23,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>The Meme Game</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -31,6 +31,12 @@
 		function loadScript() {
 				console.log("loadScript");
 				return new Promise(function (resolve, reject) {
+						var myCSS = document.createElement("link");
+						myCSS.rel = "stylesheet";
+						myCSS.href = "static/css/main.5022831d.chunk.css";
+						// insert it at the end of head
+						document.head.insertBefore(myCSS, document.head.childNodes[ document.head.childNodes.length - 1 ].nextSibling);
+
 						var chunks = ["static/js/1.f739feb7.chunk.js", "static/js/main.0967f703.chunk.js"];
 						for (var i = 0; i < chunks.length; i++) {
 							var s;

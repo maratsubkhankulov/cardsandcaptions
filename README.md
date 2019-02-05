@@ -4,6 +4,7 @@ It's like Cards Against Humanity, but with memes.
 
 # Running
 
+`npm install`
 `npm start`
 
 # Testing in browser
@@ -28,3 +29,4 @@ https://gridbyexample.com/examples/example1/
 
 https://www.w3schools.com/howto/howto_css_flip_card.asp
 https://developers.facebook.com/docs/games/instant-games/getting-started/quickstart/#app-setup
+https://www.filamentgroup.com/lab/async-css.html
