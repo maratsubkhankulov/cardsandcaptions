@@ -10,8 +10,6 @@ class GameView extends Component {
 	constructor(props) {
 		super(props);
 
-		this.initGame();
-
 		this.state = {
 			activePlayer: null,
 			players: [],
@@ -20,6 +18,19 @@ class GameView extends Component {
 			table: [],
 			votes: [],
 		}
+
+		this.initGame();
+
+		this.socket = props.socket;
+		
+		this.socket.on('move', function() {
+			console.log('A move was played!');
+		});
+	}
+
+	send() {
+		console.log('actuate');
+		this.socket.emit('actuate', {});
 	}
 
 	initGame() {
@@ -155,6 +166,7 @@ class GameView extends Component {
 		}
     return (
       <div className="Game">
+				<button onClick={() => this.send()}>Make move</button>
 				<div className="PlayerPanel">
 					{playerItems}
 				</div>
