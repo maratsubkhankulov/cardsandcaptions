@@ -22,15 +22,38 @@ class GameView extends Component {
 		this.initGame();
 
 		this.socket = props.socket;
+
+		const gameView = this;
 		
-		this.socket.on('move', function() {
-			console.log('A move was played!');
+		this.socket.on('move', function(move) {
+			console.log('.');
+			if (move.type === 'selectImageCard') {
+				gameView._selectImageCard(move.playerId, move.cardId);
+			} else
+			if (move.type === 'selectWinningCard') {
+				gameView._selectWinningCard(move.playerId, move.voterId, move.cardId);
+				console.log('selectWinningCard');
+			}
 		});
 	}
 
-	send() {
-		console.log('actuate');
-		this.socket.emit('actuate', {});
+	sendSelectImageCard(playerId, cardId) {
+		console.log('-> sendSelectImagecard');
+		this.socket.emit('actuate', {
+			type: "selectImageCard",
+			playerId: playerId,
+			cardId: cardId,
+		});
+	}
+
+	sendSelectWinningCard(playerId, voterId, cardId) {
+		console.log("-> sendSelectWinningCard");
+		this.socket.emit('actuate', {
+			type: "selectWinningCard",
+			playerId: playerId,
+			voterId: voterId,
+			cardId: cardId,
+		});
 	}
 
 	initGame() {
@@ -49,17 +72,26 @@ class GameView extends Component {
 	}
 
 	selectImageCard(id) {
+		this.sendSelectImageCard(this.state.activePlayer.id, id);
 		if (!this.state.activePlayer) {
 			throw "No active player, can't select card."
 		}
-		if (!this.game.canPlayerVote(this.state.activePlayer)) {
-			console.error("This player cannot vote");
+		this._selectImageCard(this.state.activePlayer.id, id);
+	}
+
+	_selectImageCard(playerId, cardId) {
+		let player = this.game.getPlayer(playerId);
+		if (player === null) {
+			console.error(`Player ${playerId} is null`);
+		}
+		if (!this.game.canPlayerVote(player)) {
+			console.error(`Player ${playerId} cannot vote`);
 			return;
 		}
-		this.game.voteImageCard(this.state.activePlayer, id);
+		this.game.voteImageCard(player, cardId);
 		this.setState(
 			(state, props) => {
-				let newVotes = this.state.votes.concat(new Vote(this.state.activePlayer, id));
+				let newVotes = this.state.votes.concat(new Vote(player, cardId));
 				return { votes: newVotes };
 			},
 			() => {
@@ -68,10 +100,23 @@ class GameView extends Component {
 	}
 
 	selectWinningCard(vote) {
-		if (this.game.getCurrentJudge().id !== this.state.activePlayer.id) {
+		let playerId = this.state.activePlayer.id;
+		this.sendSelectWinningCard(playerId, vote.player.id, vote.card.id);
+		this._selectWinningCard(playerId, vote.player.id, vote.card.id)
+	}
+
+	_selectWinningCard(playerId, voterId, cardId) {
+		let judge = this.game.getCurrentJudge();
+		if (judge.id !== playerId) {
 			console.error("Only the judge can select the winner");
 			return;
 		}
+		let vote = judge.getVote(playerId, cardId);
+
+		if (vote === null) {
+			console.error('Vote is null');
+		}
+
 		console.log("selectWinningCard()");
 		if (!this.game.canChooseWinningCard()) {
 			console.error("Cannot choose winning card right now");
@@ -89,7 +134,6 @@ class GameView extends Component {
 		this.game.startGame();
 		this.game.playersFillHands();
 
-		let judge = this.game.getCurrentJudge();
 		this.game.collectCaptionCard(judge);
 		this.game.revealCaptionCard(judge);
 
@@ -166,7 +210,6 @@ class GameView extends Component {
 		}
     return (
       <div className="Game">
-				<button onClick={() => this.send()}>Make move</button>
 				<div className="PlayerPanel">
 					{playerItems}
 				</div>

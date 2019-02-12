@@ -40,6 +40,16 @@ export class Player {
 		this.votes = [];
 	}
 
+	getVote(playerId, cardId) {
+		for (var i = 0; i < this.votes.length; i++) {
+			let vote = this.votes[i];
+			if (vote.player.id === playerId && vote.card.id === cardId) {
+				return vote;
+			}
+		}
+		return null;
+	}
+
 	removeCardFromHand(id) {
 		for (var i = 0; i < this.hand.length; i++) {
 			let card = this.hand[i];
