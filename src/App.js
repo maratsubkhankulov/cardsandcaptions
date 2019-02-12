@@ -10,10 +10,11 @@ class App extends Component {
 	}
 
   render() {
+		let host = "https://like-llama.glitch.me";
     return (
       <div className="App">
 				<GameView
-					socket={socketIOClient("http://localhost:4000")}
+					socket={socketIOClient(host, function() { console.log(`Connected to ${host}`)})}
 				/>
 			</div>
 		)
