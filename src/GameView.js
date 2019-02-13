@@ -26,12 +26,11 @@ class GameView extends Component {
 		const gameView = this;
 		
 		this.socket.on('move', function(move) {
-			console.log('.');
+			console.log(`Remote player move: ${move.type}`);
 			if (move.type === 'selectImageCard') {
 				gameView._selectImageCard(move.playerId, move.cardId);
 			} else
 			if (move.type === 'selectWinningCard') {
-				console.log(`selectWinningCard ${move.playerId}, ${move.voterId}, ${move.cardId}`);
 				gameView._selectWinningCard(move.playerId, move.voterId, move.cardId);
 			}
 		});
@@ -117,7 +116,6 @@ class GameView extends Component {
 			console.error('Vote is null');
 		}
 
-		console.log("selectWinningCard()");
 		if (!this.game.canChooseWinningCard()) {
 			console.error("Cannot choose winning card right now");
 			return;
@@ -136,7 +134,6 @@ class GameView extends Component {
 
 		this.game.collectCaptionCard(judge);
 		this.game.revealCaptionCard(judge);
-
 
 		this.setState(
 			(state, props) => {
