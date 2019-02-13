@@ -31,8 +31,8 @@ class GameView extends Component {
 				gameView._selectImageCard(move.playerId, move.cardId);
 			} else
 			if (move.type === 'selectWinningCard') {
+				console.log(`selectWinningCard ${move.playerId}, ${move.voterId}, ${move.cardId}`);
 				gameView._selectWinningCard(move.playerId, move.voterId, move.cardId);
-				console.log('selectWinningCard');
 			}
 		});
 	}
@@ -111,7 +111,7 @@ class GameView extends Component {
 			console.error("Only the judge can select the winner");
 			return;
 		}
-		let vote = judge.getVote(playerId, cardId);
+		let vote = judge.getVote(voterId, cardId);
 
 		if (vote === null) {
 			console.error('Vote is null');
