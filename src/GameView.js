@@ -9,20 +9,14 @@ require.context('../public/img', true);
 class GameView extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
-			activePlayer: null,
-			players: [],
-			caption: null,
-			hand: [],
-			table: [],
 			votes: [],
 		}
-
-		this.initGame();
-
 		this.socket = props.socket;
+		this.game = new Game();
+	}
 
+	componentDidMount() {
 		const gameView = this;
 		
 		this.socket.on('move', function(move) {
@@ -34,6 +28,8 @@ class GameView extends Component {
 				gameView._selectWinningCard(move.playerId, move.voterId, move.cardId);
 			}
 		});
+
+		this.initGame();
 	}
 
 	sendSelectImageCard(playerId, cardId) {
@@ -56,8 +52,6 @@ class GameView extends Component {
 	}
 
 	initGame() {
-		this.game = new Game();
-
 		fillCardStacks(this.game);
 
 		fillPlayers(this.game);
@@ -68,6 +62,7 @@ class GameView extends Component {
 		this.game.collectCaptionCard(judge);
 		this.game.revealCaptionCard(judge);
 		this.selectPlayer(this.game.players[0].id);
+		this.setState();
 	}
 
 	selectImageCard(id) {
@@ -132,15 +127,16 @@ class GameView extends Component {
 		this.game.startGame();
 		this.game.playersFillHands();
 
-		this.game.collectCaptionCard(judge);
-		this.game.revealCaptionCard(judge);
+		let newJudge = this.game.getCurrentJudge();
+		this.game.collectCaptionCard(newJudge);
+		this.game.revealCaptionCard(newJudge);
 
 		this.setState(
 			(state, props) => {
 				return { winningPlayer: winningPlayer }
 			},
 			() => {
-				console.log(`State: ${this.game.getState()}`);
+				console.log(`chooseWinningPlayer updated state: ${this.game.getState()}`);
 			});
 	}
 
@@ -205,6 +201,9 @@ class GameView extends Component {
 				)
 			);
 		}
+
+		console.log(`Judge exists: ${this.game.existsJudge()}`);
+		console.log(`Judges caption card: ${this.game.existsJudge() ? this.game.getCurrentJudge().captionCard : null}`);
     return (
       <div className="Game">
 				<div className="PlayerPanel">
