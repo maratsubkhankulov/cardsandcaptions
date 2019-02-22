@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './GameView.css';
-import { Game, Vote } from './game';
+import { Game, Vote, Player } from './game';
 import { fillCardStacks, fillPlayers } from './game_utils';
 
 // Import static images
@@ -11,13 +11,54 @@ class GameView extends Component {
 		super(props);
 		this.state = {
 			votes: [],
+			players: [],
 		}
 		this.socket = props.socket;
 		this.game = new Game();
+
+		for (var playerId in props.players) {
+			let p = new Player(playerId, playerId.substr(0, 4));
+			this.game.addPlayer(p);
+		}
 	}
 
 	componentDidMount() {
 		const gameView = this;
+
+		let view = this;
+		this.setState(
+			(state, props) => {
+				return { players: view.game.players};
+			},
+			() => {
+				console.log('Updated player list');
+			});
+
+		this.socket.on('joined-game', (data) => {
+			console.log(`Player ${data.playerId} joined`);
+			let p = new Player(data.playerId, data.playerId.substr(0, 4));
+			this.game.addPlayer(p);
+			let view = this;
+			this.setState(
+				(state, props) => {
+					return { players: view.game.players};
+				},
+				() => {
+					console.log('Updated player list');
+				});
+		});
+
+		this.socket.on('left-game', (data) => {
+			console.log(`Player ${data.playerId} joined`);
+			this.game.removePlayer(data.playerId);
+			this.setState(
+				(state, props) => {
+					return { players: view.game.players };
+				},
+				() => {
+					console.log('Updated player list');
+				});
+		});
 		
 		this.socket.on('move', function(move) {
 			console.log(`Remote player move: ${move.type}`);
@@ -29,7 +70,7 @@ class GameView extends Component {
 			}
 		});
 
-		this.initGame();
+		fillCardStacks(this.game);
 	}
 
 	sendSelectImageCard(playerId, cardId) {
@@ -54,7 +95,6 @@ class GameView extends Component {
 	initGame() {
 		fillCardStacks(this.game);
 
-		fillPlayers(this.game);
 		this.game.playersFillHands();
 		this.game.startGame();
 
@@ -163,8 +203,7 @@ class GameView extends Component {
 
   render() {
 		console.log("Render GameView");
-		const players = this.game.players;
-		const playerItems = players.map((p) => {
+		const playerItems = this.state.players.map((p) => {
 				let isActive = this.isActivePlayer(p.id);
 				let isJudge = this.isJudgePlayer(p.id);
 				let className = `${isActive ? "PlayerSelected":""} ${isJudge ? "JudgeSelected":""}`;

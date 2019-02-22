@@ -1,5 +1,3 @@
-let player_counter = 0; 
-
 export class Vote {
 	constructor(player, card) {
 		this.player = player;
@@ -9,8 +7,8 @@ export class Vote {
 
 export class Player {
 	static maxHandSize() { return 4; } // image cards are held by player
-	constructor(name) {
-		this.id = player_counter++;
+	constructor(id, name) {
+		this.id = id;
 		this.name = name;
 		this.hand = []; // Cards in hand
 		this.captionCard = null; // Current caption
@@ -174,6 +172,17 @@ export class Game {
 	// Game room actions
 	addPlayer(player) {
 		this.players.push(player);
+	}
+
+	removePlayer(id) {
+		for (var i = 0; i < this.players.length; i++) {
+			let p = this.players[i];
+			if (p.id === id) {
+				this.players.splice(i, 1);
+				return;
+			}
+		}
+		throw `Asking to remove non-existent Player(${id})`;
 	}
 
 	addCaptionCard(card) {
