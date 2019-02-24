@@ -23,9 +23,9 @@ class GameView extends Component {
 	}
 
 	componentDidMount() {
-		const gameView = this;
+		const view = this;
+		view.checkToStart();
 
-		let view = this;
 		this.setState(
 			(state, props) => {
 				return { players: view.game.players};
@@ -45,6 +45,7 @@ class GameView extends Component {
 				},
 				() => {
 					console.log('Updated player list');
+					view.checkToStart();
 				});
 		});
 
@@ -59,18 +60,25 @@ class GameView extends Component {
 					console.log('Updated player list');
 				});
 		});
-		
+
 		this.socket.on('move', function(move) {
 			console.log(`Remote player move: ${move.type}`);
 			if (move.type === 'selectImageCard') {
-				gameView._selectImageCard(move.playerId, move.cardId);
+				view._selectImageCard(move.playerId, move.cardId);
 			} else
 			if (move.type === 'selectWinningCard') {
-				gameView._selectWinningCard(move.playerId, move.voterId, move.cardId);
+				view._selectWinningCard(move.playerId, move.voterId, move.cardId);
 			}
 		});
 
 		fillCardStacks(this.game);
+	}
+
+	checkToStart() {
+		if (this.game.players.length >= Game.minPlayers()) {
+			console.log(`Reached minimum number of players ${this.game.players.length}`);
+			this.initGame();
+		}
 	}
 
 	sendSelectImageCard(playerId, cardId) {

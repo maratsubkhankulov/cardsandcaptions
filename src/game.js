@@ -139,6 +139,7 @@ export class Game {
 	static maxTurns() { return (Game.maxPlayers() - 1) * Game.maxScore() + 1; }
 	static maxScore() { return 5; }
 	static maxPlayers() { return 5; }
+	static minPlayers() { return 3; }
 
 	constructor() {
 		this.state = StateEnum.WAIT_TO_START;
