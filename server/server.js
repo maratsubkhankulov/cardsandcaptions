@@ -5,7 +5,8 @@ const uuid = require('uuid/v4');
 const app = express();
 const server = http.Server(app);
 const io = socketio(server); // Attach socket.io to our server
-import {Game} from '../src/game';
+import {Game, Player} from '../src/game';
+import {initGame, fillCardStacks} from '../src/game_utils';
 
 var port = process.env.PORT || 4000;
 
@@ -35,24 +36,26 @@ io.on('connection', function (socket) {
 
 	// Game session events
 	socket.on('create-game', function(data) {
+
+		// Create game
 		let gameId = uuid();
 		socket.join(gameId);
 
-		games[gameId] = {
-			id: gameId,
-			players: {},
-		}
+		games[gameId] = new Game(gameId);
 
+		// Update mappings
 		let playerId = data.playerId;
-		games[gameId].players[playerId] = {};
+		let player = new Player(data.playerId, data.playerName); // TODO dedupe with join-game
+		games[gameId].addPlayer(player);
+
 		clientGameMap[clientId] = gameId;
 		clientPlayerMap[clientId] = playerId;
 
 		console.log(`Player ${playerId} created game ${gameId}`);
-		socket.emit('game-created', {
-			gameId: gameId
-		});
-		socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameInfo: games[gameId]});
+
+		// Notify
+		socket.emit('game-created', { gameState: games[gameId] });
+		socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
 		socket.broadcast.emit('active-games', {games: games});
 	});
 
@@ -60,17 +63,26 @@ io.on('connection', function (socket) {
 		let gameId = data.gameId;
 		let playerId = data.playerId;
 
-		games[gameId].players[playerId] = {
-				name: "Joe Bloggs" //TODO use actual name
-			}
-		clientPlayerMap[clientId] = playerId
+		let player = new Player(data.playerId, data.playerName);
+		games[gameId].addPlayer(player);
+		clientPlayerMap[clientId] = playerId;
 		clientGameMap[clientId] = gameId;
 
 		console.log(`Player ${playerId} joined ${gameId}`)
 
 		socket.join(gameId);
-		socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameInfo: games[gameId]});
-		socket.broadcast.to(gameId).emit('joined-game', { gameId: gameId, playerId: playerId, gameInfo: games[gameId]});
+		socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
+		socket.broadcast.to(gameId).emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
+
+		// Check to start
+		const minPlayers = Game.minPlayers();
+		if (games[gameId].players.length >= minPlayers) {
+			console.log(`Reached minimum number of players ${games[gameId].players.length}`);
+
+			initGame(games[gameId]);
+			socket.emit('init-game', games[gameId]);
+			socket.broadcast.to(gameId).emit('init-game', games[gameId]);
+		}
 	});
 
 	socket.on('get-active-games', () => {
@@ -96,3 +108,7 @@ io.on('connection', function (socket) {
 		}
 	});
 });
+
+function checkToStart(game) {
+}
+

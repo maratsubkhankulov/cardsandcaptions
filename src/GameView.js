@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './GameView.css';
 import { Game, Vote, Player } from './game';
-import { fillCardStacks, fillPlayers } from './game_utils';
+import { initGame, fillCardStacks, fillPlayers } from './game_utils';
 
 // Import static images
 require.context('../public/img', true);
@@ -15,16 +15,12 @@ class GameView extends Component {
 		}
 		this.socket = props.socket;
 		this.game = new Game();
-
-		for (var playerId in props.players) {
-			let p = new Player(playerId, playerId.substr(0, 4));
-			this.game.addPlayer(p);
-		}
+		//console.log(`Game state: ${JSON.stringify(props.gameState)}`);
+		this.game.sync(props.gameState);
 	}
 
 	componentDidMount() {
 		const view = this;
-		view.checkToStart();
 
 		this.setState(
 			(state, props) => {
@@ -36,8 +32,7 @@ class GameView extends Component {
 
 		this.socket.on('joined-game', (data) => {
 			console.log(`Player ${data.playerId} joined`);
-			let p = new Player(data.playerId, data.playerId.substr(0, 4));
-			this.game.addPlayer(p);
+			this.game.sync(data.game);
 			let view = this;
 			this.setState(
 				(state, props) => {
@@ -45,7 +40,6 @@ class GameView extends Component {
 				},
 				() => {
 					console.log('Updated player list');
-					view.checkToStart();
 				});
 		});
 
@@ -71,14 +65,13 @@ class GameView extends Component {
 			}
 		});
 
-		fillCardStacks(this.game);
-	}
+		this.socket.on('init-game', function(game) {
+			console.log('init-game');
+			this.game.sync(game);
+			view.initGame();
+		});
 
-	checkToStart() {
-		if (this.game.players.length >= Game.minPlayers()) {
-			console.log(`Reached minimum number of players ${this.game.players.length}`);
-			this.initGame();
-		}
+		fillCardStacks(this.game);
 	}
 
 	sendSelectImageCard(playerId, cardId) {
@@ -101,16 +94,14 @@ class GameView extends Component {
 	}
 
 	initGame() {
-		fillCardStacks(this.game);
-
-		this.game.playersFillHands();
-		this.game.startGame();
-
-		let judge = this.game.getCurrentJudge();
-		this.game.collectCaptionCard(judge);
-		this.game.revealCaptionCard(judge);
-		this.selectPlayer(this.game.players[0].id);
-		this.setState();
+		console.log('Init game');
+		this.setState(
+			(state, props) => {
+				return { players: this.game.players };
+			},
+			() => {
+				console.log(`Updated players.`);
+			});
 	}
 
 	selectImageCard(id) {

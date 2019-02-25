@@ -1,5 +1,16 @@
 import {CaptionCard, ImageCard, Player} from './game.js';
 
+export function initGame(game) {
+	fillCardStacks(game);
+
+	game.playersFillHands();
+	game.startGame();
+
+	let judge = game.getCurrentJudge();
+	game.collectCaptionCard(judge);
+	game.revealCaptionCard(judge);
+}
+
 export function fillCardStacks(game) {
 	game.addCaptionCard(new CaptionCard(1, "I didn't choose the thug life, the thug life chose me."));
 	game.addCaptionCard(new CaptionCard(2, "Why isn't anybody giving me attention?"));

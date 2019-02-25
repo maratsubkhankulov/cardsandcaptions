@@ -10,10 +10,14 @@ class App extends Component {
 		super()
 
 		this.state = {
-			gameId: null,
+			gameState: null,
 			playerId: uuid(),
-			activeGames: {},
+			playerName: "User",
+			activeGamesStates: {},
 		}
+
+		//TODO replace with actual fb id
+		this.state.playerName = this.state.playerName + this.state.playerId.substring(0,1);
 
 		let app = this;
 		//let host = "https://like-llama.glitch.me";
@@ -21,18 +25,19 @@ class App extends Component {
 		this.socket = socketIOClient(host, function() { console.log(`Connected to ${host}`)});
 		//TODO refactor into socket client interface
 		this.socket.on('game-created', function(data) {
-			console.log(`server: game-created with id ${data.gameId}`);
+			console.log(`server: game-created with id ${data.gameState.id}`);
 			app.createdGame(data);
 		});
 
 		this.socket.on('joined-game', function(data) {
+			console.log(`server: joined-game with id ${data.gameState.id}`);
 			app.joinedGame(data);
 		});
 
 		this.socket.on('active-games', function(data) {
 			app.setState(
 				(state, props) => {
-					return { activeGames: data.games }
+					return { activeGamesStates: data.games }
 				},
 				() => {
 					console.log(`fetched active games`);
@@ -46,6 +51,7 @@ class App extends Component {
 	createGame() {
 		this.socket.emit('create-game', {
 			playerId: this.state.playerId,
+			playerName: this.state.playerName,
 		});
 	}
 
@@ -53,31 +59,30 @@ class App extends Component {
 		this.socket.emit('join-game', {
 			gameId: gameId,
 			playerId: this.state.playerId,
+			playerName: this.state.playerName,
 		});
 	}
 
 	joinedGame(data) {
-		if (data.gameId) {
+		if (data.gameState) {
 			this.setState(
 				(state, props) => {
 					return {
-						gameId: data.gameId,
-						players: data.gameInfo.players,
+						gameState: data.gameState,
 					};
 				},
 				() => {
-					console.log(`gameId updated`);
+					console.log(`gameState updated`);
 				});
 		}
 	}
 
 	createdGame(data) {
-		if (data.gameId) {
+		if (data.gameState) {
 			this.setState(
 				(state, props) => {
 					return {
-						gameId: data.gameId,
-						players: {},
+						gameState: data.game,
 					};
 				},
 				() => {
@@ -88,17 +93,16 @@ class App extends Component {
 
   render() {
 		let gameView;
-		if (this.state.gameId) {
+		if (this.state.gameState) {
 			gameView = (
 					<GameView
 						socket={this.socket}
-						gameId={this.state.gameId}
-						players={this.state.players}
+						gameState={this.state.gameState}
 					/>
 			)
 		}
 
-		let gamesListView = Object.keys(this.state.activeGames).map((key, index) => {
+		let gamesListView = Object.keys(this.state.activeGamesStates).map((key, index) => {
 			let gameId = key;
 			return <div key={gameId} onClick={() => this.joinGame(gameId)}> {gameId} </div>
 		});

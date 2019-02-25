@@ -16,6 +16,30 @@ export class Player {
 		this.votes = []; // Holds cards when this player is judge
 	}
 
+	static fromObject(object) {
+		let p = new Player();
+
+		p.id = object.id;
+		p.name = object.name;
+
+		p.hand = [];
+		for (var i = 0; i < object.hand.length; i++) {
+			this.hand.push(Object.assign(new ImageCard, object.hand[i]));
+		}
+		p.captionCard = Object.assign(new CaptionCard, object.captionCard);
+
+		p.points = [];
+		for (var i = 0; i < object.points.length; i++) {
+			this.points.push(Object.assign(new CaptionCard, object.points[i]));
+		}
+
+		p.votes = [];
+		for (var i = 0; i < object.votes.length; i++) {
+			this.votes.push(Object.assign(new Vote, object.votes[i]));
+		}
+		return p;
+	}
+
 	takeCaptionCard(card) {
 		console.assert(this.captionCard === null);
 		this.captionCard = card;
@@ -139,15 +163,38 @@ export class Game {
 	static maxTurns() { return (Game.maxPlayers() - 1) * Game.maxScore() + 1; }
 	static maxScore() { return 5; }
 	static maxPlayers() { return 5; }
-	static minPlayers() { return 3; }
+	static minPlayers() { return 2; } // TODO change to 3
 
-	constructor() {
+	constructor(id) {
+		this.id = id;
 		this.state = StateEnum.WAIT_TO_START;
 		this.players = []; // Cards in hand
 		this.caption_stack = []; // Stack of caption cards
 		this.image_stack = []; // Stack of image cards
 		this.turn_number = 0;
 		this.currentJudge = -1;
+	}
+
+	sync(other) {
+		this.state = other.state;
+		this.players = [];
+		for (let i = 0; i < other.players.length; i++) {
+			this.players.push(Player.fromObject(other.players[i]));
+		}
+		console.log(`Has full hand: ${this.players[0].hasFullHand()}`);
+
+		this.caption_stack = [];
+		for (let i = 0; i < other.caption_stack.length; i++) {
+			this.image_stack.push(Object.assign(new ImageCard, other.caption_stack[i]));
+		}
+		
+		this.image_stack = [];
+		for (let i = 0; i < other.image_stack.length; i++) {
+			this.image_stack.push(Object.assign(new ImageCard, other.image_stack[i]));
+		}
+
+		this.turn_number = other.turn_number;
+		this.currentJudge = other.currentJudge;
 	}
 
 	getPlayer(id) {
