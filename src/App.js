@@ -9,15 +9,23 @@ class App extends Component {
 	constructor() {
 		super()
 
-		this.state = {
-			gameState: null,
-			playerId: uuid(),
-			playerName: "User",
-			activeGamesStates: {},
+		if (window.FBInstant && window.FBInstant.player.getId) {
+			console.log(window.FBInstant.player.getId);
+			this.state = {
+				gameState: null,
+				playerId: window.FBInstant.player.getId(),
+				playerName: window.FBInstant.player.getName(),
+				activeGamesStates: {},
+			}
+		} else {
+			let id = uuid();
+			this.state = {
+				gameState: null,
+				playerId: id,
+				playerName: `User_${id.substring(0,1)}`,
+				activeGamesStates: {},
+			}
 		}
-
-		//TODO replace with actual fb id
-		this.state.playerName = this.state.playerName + this.state.playerId.substring(0,1);
 
 		let app = this;
 		//let host = "https://like-llama.glitch.me";
