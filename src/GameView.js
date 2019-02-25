@@ -15,7 +15,6 @@ class GameView extends Component {
 		}
 		this.socket = props.socket;
 		this.game = new Game();
-		//console.log(`Game state: ${JSON.stringify(props.gameState)}`);
 		this.game.sync(props.gameState);
 	}
 
@@ -67,7 +66,8 @@ class GameView extends Component {
 
 		this.socket.on('init-game', function(game) {
 			console.log('init-game');
-			this.game.sync(game);
+		  console.log(`Game state: ${JSON.stringify(game)}`);
+			view.game.sync(game);
 			view.initGame();
 		});
 

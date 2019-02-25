@@ -24,18 +24,18 @@ export class Player {
 
 		p.hand = [];
 		for (var i = 0; i < object.hand.length; i++) {
-			this.hand.push(Object.assign(new ImageCard, object.hand[i]));
+			p.hand.push(Object.assign(new ImageCard, object.hand[i]));
 		}
 		p.captionCard = Object.assign(new CaptionCard, object.captionCard);
 
 		p.points = [];
 		for (var i = 0; i < object.points.length; i++) {
-			this.points.push(Object.assign(new CaptionCard, object.points[i]));
+			p.points.push(Object.assign(new CaptionCard, object.points[i]));
 		}
 
 		p.votes = [];
 		for (var i = 0; i < object.votes.length; i++) {
-			this.votes.push(Object.assign(new Vote, object.votes[i]));
+			p.votes.push(Object.assign(new Vote, object.votes[i]));
 		}
 		return p;
 	}
