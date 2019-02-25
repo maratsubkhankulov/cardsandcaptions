@@ -95,13 +95,14 @@ class GameView extends Component {
 	}
 
 	initGame() {
-		console.log('Init game');
+		let view = this;
 		this.setState(
 			(state, props) => {
 				return { players: this.game.players };
 			},
 			() => {
 				console.log(`Updated players.`);
+				view.selectPlayer(this.state.playerId);
 			});
 	}
 

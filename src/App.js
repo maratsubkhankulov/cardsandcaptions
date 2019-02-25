@@ -98,6 +98,7 @@ class App extends Component {
 					<GameView
 						socket={this.socket}
 						gameState={this.state.gameState}
+						playerId={this.state.playerId}
 					/>
 			)
 		}
