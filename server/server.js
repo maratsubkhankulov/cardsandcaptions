@@ -97,7 +97,7 @@ io.on('connection', function (socket) {
 			game._selectImageCard(move.playerId, move.cardId);
 		} else
 		if (move.type === 'selectWinningCard') {
-			//view._selectWinningCard(move.playerId, move.voterId, move.cardId);
+			game._selectWinningCard(move.playerId, move.voterId, move.cardId);
 		}
 		socket.emit('sync', game);
 		socket.broadcast.to(gameId).emit('sync', game);

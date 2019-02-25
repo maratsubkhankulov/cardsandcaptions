@@ -107,7 +107,8 @@ class GameView extends Component {
 			(state, props) => {
 				return {
 					players: this.game.players,
-					votes: this.game.votes
+					votes: this.game.votes,
+					//winningPlayer: winningPlayer,
 				};
 			},
 			() => {
@@ -120,68 +121,11 @@ class GameView extends Component {
 		if (!this.state.activePlayer) {
 			throw "No active player, can't select card."
 		}
-		this._selectImageCard(this.state.activePlayer.id, id);
-	}
-
-	_selectImageCard(playerId, cardId) {
-		this.game._selectImageCard(playerId, cardId);
-		/*
-		this.setState(
-			(state, props) => {
-				let newVotes = this.state.votes.concat(new Vote(player, cardId));
-				return { votes: newVotes };
-			},
-			() => {
-				console.log(`Vote occurred.`);
-			});
-		*/
 	}
 
 	selectWinningCard(vote) {
 		let playerId = this.state.activePlayer.id;
 		this.sendSelectWinningCard(playerId, vote.player.id, vote.card.id);
-		this._selectWinningCard(playerId, vote.player.id, vote.card.id)
-	}
-
-	_selectWinningCard(playerId, voterId, cardId) {
-		let judge = this.game.getCurrentJudge();
-		if (judge.id !== playerId) {
-			console.error("Only the judge can select the winner");
-			return;
-		}
-		let vote = judge.getVote(voterId, cardId);
-
-		if (vote === null) {
-			console.error('Vote is null');
-		}
-
-		if (!this.game.canChooseWinningCard()) {
-			console.error("Cannot choose winning card right now");
-			return;
-		}
-		let winningPlayer = this.game.chooseWinningCard(this.game.getCurrentJudge(), vote);
-		if (winningPlayer.points.length >= Game.maxScore()) {
-			alert(`Winner: ${winningPlayer.name}!`);
-			this.initGame();
-			return;
-		}
-
-		this.game.endTurn();
-
-		this.game.startGame();
-		this.game.playersFillHands();
-
-		let newJudge = this.game.getCurrentJudge();
-		this.game.collectCaptionCard(newJudge);
-		this.game.revealCaptionCard(newJudge);
-
-		this.setState(
-			(state, props) => {
-				return { winningPlayer: winningPlayer }
-			},
-			() => {
-				console.log(`chooseWinningPlayer updated state: ${this.game.getState()}`);
-			});
 	}
 
 	selectPlayer(id) {

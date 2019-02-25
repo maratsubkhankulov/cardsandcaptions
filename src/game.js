@@ -421,4 +421,32 @@ export class Game {
 		}
 		this.voteImageCard(player, cardId);
 	}
+
+	_selectWinningCard(playerId, voterId, cardId) {
+		let judge = this.getCurrentJudge();
+		if (judge.id !== playerId) {
+			console.error("Only the judge can select the winner");
+			return;
+		}
+		let vote = judge.getVote(voterId, cardId);
+
+		if (vote === null) {
+			console.error('Vote is null');
+		}
+
+		if (!this.canChooseWinningCard()) {
+			console.error("Cannot choose winning card right now");
+			return;
+		}
+		this.chooseWinningCard(this.getCurrentJudge(), vote);
+
+		this.endTurn();
+
+		this.startGame();
+		this.playersFillHands();
+
+		let newJudge = this.getCurrentJudge();
+		this.collectCaptionCard(newJudge);
+		this.revealCaptionCard(newJudge);
+	}
 }
