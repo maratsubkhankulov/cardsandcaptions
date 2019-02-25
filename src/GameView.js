@@ -13,6 +13,7 @@ class GameView extends Component {
 			playerId: props.playerId,
 			votes: [],
 			players: [],
+			activePlayerId: null,
 		}
 		this.socket = props.socket;
 		this.game = new Game();
@@ -117,29 +118,32 @@ class GameView extends Component {
 	}
 
 	selectImageCard(id) {
-		this.sendSelectImageCard(this.state.activePlayer.id, id);
-		if (!this.state.activePlayer) {
+		this.sendSelectImageCard(this.state.activePlayerId, id);
+		if (!this.state.activePlayerId) {
 			throw "No active player, can't select card."
 		}
 	}
 
 	selectWinningCard(vote) {
-		let playerId = this.state.activePlayer.id;
-		this.sendSelectWinningCard(playerId, vote.player.id, vote.card.id);
+		this.sendSelectWinningCard(
+			this.state.activePlayerId,
+			vote.player.id,
+			vote.card.id);
 	}
 
 	selectPlayer(id) {
 		this.setState(
 			(state, props) => {
-				return {activePlayer: this.game.getPlayer(id)};
+				return {activePlayerId: id};
 			},
 			() => {
-				console.log(`Selected player ${this.state.activePlayer.name}`);
+				let player = this.game.getPlayer(this.state.activePlayerId);
+				console.log(`Selected player ${player.name}`);
 			});
 	}
 
 	isActivePlayer(id) {
-		return this.state.activePlayer && this.state.activePlayer.id === id
+		return this.state.activePlayerId === id
 	}
 
 	isJudgePlayer(id) {
@@ -168,8 +172,9 @@ class GameView extends Component {
 			});
 
 		let imageCardsContent = "Not an active player";
-		if (this.state.activePlayer) {
-			const hand = this.state.activePlayer.hand;
+		if (this.state.activePlayerId) {
+			let player = this.game.getPlayer(this.state.activePlayerId);
+			const hand = player.hand;
 			imageCardsContent = hand.map((card) => (
 					<div key={card.id} className="card" onClick={() => this.selectImageCard(card.id)}>
 						<img src={card.img} className="card" alt={card.id} />

@@ -178,6 +178,7 @@ export class Game {
 	sync(other) {
 		this.state = other.state;
 		this.players = [];
+		console.log(`Player # ${this.players.length}`);
 		for (let i = 0; i < other.players.length; i++) {
 			this.players.push(Player.fromObject(other.players[i]));
 		}
