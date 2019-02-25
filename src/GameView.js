@@ -55,14 +55,10 @@ class GameView extends Component {
 				});
 		});
 
-		this.socket.on('move', function(move) {
-			console.log(`Remote player move: ${move.type}`);
-			if (move.type === 'selectImageCard') {
-				view._selectImageCard(move.playerId, move.cardId);
-			} else
-			if (move.type === 'selectWinningCard') {
-				view._selectWinningCard(move.playerId, move.voterId, move.cardId);
-			}
+		this.socket.on('sync', function(game) {
+			console.log(`Sync game`);
+			view.game.sync(game);
+			view.sync();
 		});
 
 		this.socket.on('init-game', function(game) {
@@ -106,6 +102,19 @@ class GameView extends Component {
 			});
 	}
 
+	sync() {
+		this.setState(
+			(state, props) => {
+				return {
+					players: this.game.players,
+					votes: this.game.votes
+				};
+			},
+			() => {
+				console.log(`Successful game sync.`);
+			});
+	}
+
 	selectImageCard(id) {
 		this.sendSelectImageCard(this.state.activePlayer.id, id);
 		if (!this.state.activePlayer) {
@@ -115,15 +124,8 @@ class GameView extends Component {
 	}
 
 	_selectImageCard(playerId, cardId) {
-		let player = this.game.getPlayer(playerId);
-		if (player === null) {
-			console.error(`Player ${playerId} is null`);
-		}
-		if (!this.game.canPlayerVote(player)) {
-			console.error(`Player ${playerId} cannot vote`);
-			return;
-		}
-		this.game.voteImageCard(player, cardId);
+		this.game._selectImageCard(playerId, cardId);
+		/*
 		this.setState(
 			(state, props) => {
 				let newVotes = this.state.votes.concat(new Vote(player, cardId));
@@ -132,6 +134,7 @@ class GameView extends Component {
 			() => {
 				console.log(`Vote occurred.`);
 			});
+		*/
 	}
 
 	selectWinningCard(vote) {

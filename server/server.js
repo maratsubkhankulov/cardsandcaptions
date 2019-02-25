@@ -90,9 +90,17 @@ io.on('connection', function (socket) {
 	});
 
 	// In-game events
-	socket.on('actuate', function(data) {
-		// Emit the move to all other clients
-		socket.broadcast.emit('move', data);
+	socket.on('actuate', function(move) {
+		const gameId = clientGameMap[clientId];
+		const game = games[gameId];
+		if (move.type === 'selectImageCard') {
+			game._selectImageCard(move.playerId, move.cardId);
+		} else
+		if (move.type === 'selectWinningCard') {
+			//view._selectWinningCard(move.playerId, move.voterId, move.cardId);
+		}
+		socket.emit('sync', game);
+		socket.broadcast.to(gameId).emit('sync', game);
 	});
 
 	socket.on('disconnect', function() {
@@ -108,7 +116,3 @@ io.on('connection', function (socket) {
 		}
 	});
 });
-
-function checkToStart(game) {
-}
-

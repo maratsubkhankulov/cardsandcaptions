@@ -408,4 +408,17 @@ export class Game {
 		
 		return winner;
 	}
+
+	// Convenience methods
+	_selectImageCard(playerId, cardId) {
+		let player = this.getPlayer(playerId);
+		if (player === null) {
+			console.error(`Player ${playerId} is null`);
+		}
+		if (!this.canPlayerVote(player)) {
+			console.error(`Player ${playerId} cannot vote`);
+			return;
+		}
+		this.voteImageCard(player, cardId);
+	}
 }
