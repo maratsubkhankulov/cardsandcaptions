@@ -163,7 +163,7 @@ export class Game {
 	static maxTurns() { return (Game.maxPlayers() - 1) * Game.maxScore() + 1; }
 	static maxScore() { return 5; }
 	static maxPlayers() { return 5; }
-	static minPlayers() { return 2; } // TODO change to 3
+	static minPlayers() { return 3; }
 
 	constructor(id) {
 		this.id = id;
@@ -181,7 +181,6 @@ export class Game {
 		for (let i = 0; i < other.players.length; i++) {
 			this.players.push(Player.fromObject(other.players[i]));
 		}
-		console.log(`Has full hand: ${this.players[0].hasFullHand()}`);
 
 		this.caption_stack = [];
 		for (let i = 0; i < other.caption_stack.length; i++) {

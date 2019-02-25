@@ -10,6 +10,7 @@ class GameView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			playerId: props.playerId,
 			votes: [],
 			players: [],
 		}
@@ -31,7 +32,7 @@ class GameView extends Component {
 
 		this.socket.on('joined-game', (data) => {
 			console.log(`Player ${data.playerId} joined`);
-			this.game.sync(data.game);
+			this.game.sync(data.gameState);
 			let view = this;
 			this.setState(
 				(state, props) => {
