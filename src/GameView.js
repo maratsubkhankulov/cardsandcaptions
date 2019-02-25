@@ -14,6 +14,7 @@ class GameView extends Component {
 			votes: [],
 			players: [],
 			activePlayerId: null,
+			winner: null,
 		}
 		this.socket = props.socket;
 		this.game = new Game();
@@ -50,6 +51,22 @@ class GameView extends Component {
 			this.setState(
 				(state, props) => {
 					return { players: view.game.players };
+				},
+				() => {
+					console.log('Updated player list');
+				});
+		});
+
+		this.socket.on('winner', (data) => {
+			console.log(`Player ${data.player.name} won`);
+			this.setState(
+				(state, props) => {
+					return {
+						winner: {
+							name: data.player.name,
+							card: data.card,
+					  }
+					};
 				},
 				() => {
 					console.log('Updated player list');
@@ -194,6 +211,17 @@ class GameView extends Component {
 			);
 		}
 
+		let winnerView;
+		if (this.state.winner) {
+			winnerView = (
+				<div>
+					<h3>
+						{this.state.winner.name} wins!
+					</h3>
+				</div>
+			)
+		}
+
 		console.log(`Judge exists: ${this.game.existsJudge()}`);
 		console.log(`Judges caption card: ${this.game.existsJudge() ? this.game.getCurrentJudge().captionCard : null}`);
     return (
@@ -212,6 +240,7 @@ class GameView extends Component {
 				<div className="Hand">
 						{imageCardsContent}
 				</div>
+				{winnerView}
 				<div className="Footer">
 					<h3>Debug:</h3>
 					<p>

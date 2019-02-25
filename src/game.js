@@ -449,5 +449,7 @@ export class Game {
 		let newJudge = this.getCurrentJudge();
 		this.collectCaptionCard(newJudge);
 		this.revealCaptionCard(newJudge);
+
+		return vote;
 	}
 }
