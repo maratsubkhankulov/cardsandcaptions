@@ -37,7 +37,7 @@ export function fillCardStacks(game) {
 
 	game.addImageCard(new ImageCard(1, "./img/1.jpg"));
 	game.addImageCard(new ImageCard(2, "./img/2.jpg"));
-	game.addImageCard(new ImageCard(3, "./img/3.jpg"));
+	game.addImageCard(new ImageCard(3, "./img/3.gif"));
 	game.addImageCard(new ImageCard(4, "./img/4.jpg"));
 	game.addImageCard(new ImageCard(5, "./img/5.jpg"));
 	game.addImageCard(new ImageCard(6, "./img/6.jpg"));

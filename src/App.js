@@ -9,8 +9,8 @@ class App extends Component {
 	constructor() {
 		super()
 
+		console.log(JSON.stringify(window.FBInstant));
 		if (window.FBInstant && window.FBInstant.player.getId) {
-			console.log(window.FBInstant.player.getId);
 			this.state = {
 				gameState: null,
 				playerId: window.FBInstant.player.getId(),
@@ -28,8 +28,8 @@ class App extends Component {
 		}
 
 		let app = this;
-		//let host = "https://like-llama.glitch.me";
-		let host = "http://localhost:4000";
+		let host = "https://like-llama.glitch.me";
+		//let host = "http://localhost:4000";
 		this.socket = socketIOClient(host, function() { console.log(`Connected to ${host}`)});
 		//TODO refactor into socket client interface
 		this.socket.on('game-created', function(data) {
@@ -118,6 +118,7 @@ class App extends Component {
 
     return (
       <div className="App">
+				<h4>{this.state.playerName}</h4>
 				<div onClick={() => this.createGame()}>Create game</div>
 				{gamesListView}
 				{gameView}
