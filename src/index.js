@@ -1,12 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+window.onload = function () {
+	console.log('onload')
+	window.FBInstant.initializeAsync().then(function() {
+			console.log('init')
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+			window.FBInstant.setLoadingProgress(70);
+			window.FBInstant.startGameAsync()
+				.then(function() {
+					console.log('startGameAsync');
+					start();
+				});
+	});
+}
+
+function start() {
+	console.log('Start')
+
+	const App = () =>(
+			<div>
+					Hello world!!!!!!!!!!!!!!!!!!!!!!!!!!
+			</div>
+	)
+
+	ReactDOM.render(
+			<App/>,
+			document.getElementById('root')
+	)
+}
