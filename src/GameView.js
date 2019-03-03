@@ -3,9 +3,6 @@ import './GameView.css';
 import { Game, Vote, Player } from './game';
 import { initGame, fillCardStacks, fillPlayers } from './game_utils';
 
-// Import static images
-require.context('./img', true);
-
 class GameView extends Component {
 	constructor(props) {
 		super(props);
