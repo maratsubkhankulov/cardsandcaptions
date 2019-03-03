@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import App from './App.js';
 
 window.onload = function () {
 	console.log('onload')
@@ -16,16 +17,7 @@ window.onload = function () {
 }
 
 function start() {
-	console.log('Start')
+	console.log('Start');
 
-	const App = () =>(
-			<div>
-					Hello world!!!!!!!!!!!!!!!!!!!!!!!!!!
-			</div>
-	)
-
-	ReactDOM.render(
-			<App/>,
-			document.getElementById('root')
-	)
+	ReactDOM.render( <App/>, document.getElementById('root'))
 }

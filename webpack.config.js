@@ -7,12 +7,24 @@ module.exports = {
         filename: 'build.js',
         path: path.join(__dirname, '/dist')
     },
+		resolve: {
+			extensions: ['.js', '.jsx']
+		},
     module:{
-        rules:[{
-            exclude: /node_modules/,
-            test: /\.js$/,
-            loader: 'babel-loader'
-        }]
+        rules:[
+					{
+							exclude: /node_modules/,
+							test: /\.js$|\.jsx$/,
+							loader: 'babel-loader',
+							query: {
+								presets: ['es2015', 'react']
+							}
+					},
+					{
+						test: /\.css$/,
+						use: ['style-loader', 'css-loader'],
+					},
+				]
     },
     plugins:[
         new hwp({template:path.join(__dirname, '/src/index.html')})
