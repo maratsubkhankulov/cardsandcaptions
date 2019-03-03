@@ -4,7 +4,7 @@ import { Game, Vote, Player } from './game';
 import { initGame, fillCardStacks, fillPlayers } from './game_utils';
 
 // Import static images
-require.context('../public/img', true);
+require.context('./img', true);
 
 class GameView extends Component {
 	constructor(props) {
