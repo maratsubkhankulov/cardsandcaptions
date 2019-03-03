@@ -10,10 +10,10 @@ class App extends Component {
 		super()
 
 		console.log(JSON.stringify(window.FBInstant));
-		if (window.FBInstant && window.FBInstant.player.getId) {
+		if (window.FBInstant && window.FBInstant.player.getID) {
 			this.state = {
 				gameState: null,
-				playerId: window.FBInstant.player.getId(),
+				playerId: window.FBInstant.player.getID(),
 				playerName: window.FBInstant.player.getName(),
 				activeGamesStates: {},
 			}
