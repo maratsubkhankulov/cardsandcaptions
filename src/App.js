@@ -15,8 +15,7 @@ class App extends Component {
 		}
 
 		let app = this;
-		let host = "https://like-llama.glitch.me";
-		//let host = "http://localhost:4000";
+		let host = props.server;
 		this.socket = socketIOClient(host, function() { console.log(`Connected to ${host}`)});
 		//TODO refactor into socket client interface
 		this.socket.on('game-created', function(data) {

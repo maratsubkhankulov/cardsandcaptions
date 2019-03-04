@@ -23,6 +23,7 @@ function start() {
 		<App
 			playerId={window.FBInstant.player.getID()}
 			playerName={window.FBInstant.player.getName()}
+			server="https://like-llama.glitch.me"
 			fbinstant={window.FBInstant}
 		/>, document.getElementById('root'))
 }

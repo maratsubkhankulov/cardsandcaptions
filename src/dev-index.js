@@ -11,5 +11,6 @@ window.onload = function () {
 		<App
 			playerId={id}
 			playerName={name}
+			server="http://localhost:4000"
 		/>, document.getElementById('root'))
 }
