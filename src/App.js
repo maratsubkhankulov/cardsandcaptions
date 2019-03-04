@@ -3,28 +3,15 @@ import './App.css';
 import GameView from './GameView.js';
 import socketIOClient from 'socket.io-client';
 
-const uuid = require('uuid/v4');
-
 class App extends Component {
-	constructor() {
-		super()
+	constructor(props) {
+		super(props)
 
-		console.log(JSON.stringify(window.FBInstant));
-		if (window.FBInstant && window.FBInstant.player.getID) {
-			this.state = {
-				gameState: null,
-				playerId: window.FBInstant.player.getID(),
-				playerName: window.FBInstant.player.getName(),
-				activeGamesStates: {},
-			}
-		} else {
-			let id = uuid();
-			this.state = {
-				gameState: null,
-				playerId: id,
-				playerName: `User_${id.substring(0,1)}`,
-				activeGamesStates: {},
-			}
+		this.state = {
+			gameState: null,
+			playerId: props.playerId,
+			playerName: props.playerName,
+			activeGamesStates: {},
 		}
 
 		let app = this;

@@ -19,5 +19,10 @@ window.onload = function () {
 function start() {
 	console.log('Start');
 
-	ReactDOM.render( <App/>, document.getElementById('root'))
+	ReactDOM.render(
+		<App
+			playerId={window.FBInstant.player.getID()}
+			playerName={window.FBInstant.player.getName()}
+			fbinstant={window.FBInstant}
+		/>, document.getElementById('root'))
 }
