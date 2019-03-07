@@ -46,8 +46,13 @@ function render() {
 			});
 
 	return (
-			<div className="PlayerPanel">
-				{playerItems}
+			<div>
+				<div className="PlayerPanel">
+					{playerItems}
+				</div>
+				<div className="Banner">
+					Waiting for players to join...
+				</div>
 			</div>
 	)
 }

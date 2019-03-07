@@ -10,6 +10,16 @@
 	padding-bottom: 1%;
 }
 
+.Banner {
+  background-color: #42cef4;
+	color: #ffffff;
+	font-size: 20pt;
+	min-height: 80px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 90px;
+}
+
 .Table {
 	background-color: #aaaaff;
   display: grid;
