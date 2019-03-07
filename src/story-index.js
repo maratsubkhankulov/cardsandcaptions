@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './GameView.css';
 import AvatarView from './AvatarView.js';
+import CardView from './CardView.js';
 
 const uuid = require('uuid/v4');
 
@@ -31,6 +32,29 @@ function render() {
 				imgUrl: 'https://source.unsplash.com/random/75x75',
 			}
 		]
+
+		let cards = [
+			{
+				id: 1,
+				selected: false,
+				imgUrl: 'img/1.jpg',
+			},
+			{
+				id: 2,
+				selected: false,
+				imgUrl: 'img/2.jpg',
+			},
+			{
+				id: 3,
+				selected: false,
+				imgUrl: 'img/5.jpg',
+			},
+			{
+				id: 4,
+				selected: false,
+				imgUrl: 'img/4.jpg',
+			},
+		]
 		const playerItems = players.map((p) => {
 				let className = `${p.isActive ? "PlayerSelected":""} ${p.isJudge ? "JudgeSelected":""}`;
 					return (
@@ -45,6 +69,16 @@ function render() {
 					)
 			});
 
+		const cardItems = cards.map((c) => {
+			return (
+				<CardView
+					key={c.id}
+					id={c.id}
+					selected={c.selected}
+					imgUrl={c.imgUrl}
+				/>
+			)
+		});
 
 	return (
 			<div>
@@ -58,6 +92,7 @@ function render() {
 					When you read a very long caption and it just doesn't seem to end
 				</div>
 				<div className="Hand">
+					{cardItems}
 				</div>
 			</div>
 	)
