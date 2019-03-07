@@ -1,3 +1,21 @@
+.Header {
+	background-color: #ffffff;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.Timer {
+	background-color: #000000;
+	border-radius: 50%;
+	color: #ffffff;
+	font-size: 15;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 30px;
+}
+
 .PlayerPanel {
   background-color: #000000;
 	display: grid;

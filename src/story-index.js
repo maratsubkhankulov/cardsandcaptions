@@ -35,7 +35,7 @@ function render() {
 		let cards = [
 			{
 				id: 1,
-				selected: false,
+				selected: true,
 				imgUrl: 'img/1.jpg',
 			},
 			{
@@ -81,6 +81,9 @@ function render() {
 
 	return (
 			<div>
+				<div className="Header">
+					<div className="Timer">:07</div>
+				</div>
 				<div className="PlayerPanel">
 					{playerItems}
 				</div>

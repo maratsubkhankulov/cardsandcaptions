@@ -12,9 +12,13 @@ class CardView extends Component {
 	}
 
 	render() {
+		let className = "Card"
+		if (this.state.selected) {
+			className = "SelectedCard"
+		}
 		return (
-			<div className="Card" key={this.state.id}>
-				<img className="Card" src={this.state.imgUrl} alt={this.state.id} />
+			<div className={className} key={this.state.id}>
+				<img className={className} src={this.state.imgUrl} alt={this.state.id} />
 			</div>
 		)
 	}
