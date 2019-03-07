@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './GameView.css';
 import AvatarView from './AvatarView.js';
 import CardView from './CardView.js';
+import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
 
 const uuid = require('uuid/v4');
@@ -21,7 +22,7 @@ function render() {
 				name: 'Sam',
 				points: 2,
 				selected: true,
-				imgUrl: 'https://source.unsplash.com/random/50x50',
+				imgUrl: 'https://source.unsplash.com/random/75x75',
 			},
 			{
 				id: '2',
@@ -54,39 +55,15 @@ function render() {
 				imgUrl: 'img/4.jpg',
 			},
 		]
-		const playerItems = players.map((p) => {
-				let className = `${p.isActive ? "PlayerSelected":""} ${p.isJudge ? "JudgeSelected":""}`;
-					return (
-						<AvatarView
-							key={p.id}
-							id={p.id}
-							name={p.name}
-							points={p.points}
-							selected={p.selected}
-							imgUrl='https://source.unsplash.com/random/75x75'
-						/>
-					)
-			});
-
-		const cardItems = cards.map((c) => {
-			return (
-				<CardView
-					key={c.id}
-					id={c.id}
-					selected={c.selected}
-					imgUrl={c.imgUrl}
-				/>
-			)
-		});
 
 	return (
 			<div>
 				<div className="Header">
 					<div className="Timer">:07</div>
 				</div>
-				<div className="PlayerPanel">
-					{playerItems}
-				</div>
+				<PlayerPanelView
+					players={players}
+				/>
 				<div className="Banner">
 					Waiting for players to join...
 				</div>

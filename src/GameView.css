@@ -16,17 +16,6 @@
 	line-height: 30px;
 }
 
-.PlayerPanel {
-  background-color: #000000;
-	display: grid;
-	grid-template-columns: repeat(6, 1fr);
-	grid-gap: 10px;
-	min-height: 40px;
-	padding-left: 10%;
-	padding-right: 10%;
-	padding-bottom: 1%;
-}
-
 .Banner {
   background-color: #42cef4;
 	color: #ffffff;
