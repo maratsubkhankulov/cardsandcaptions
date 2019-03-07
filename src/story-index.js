@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './GameView.css';
 import AvatarView from './AvatarView.js';
 import CardView from './CardView.js';
+import HandView from './HandView.js';
 
 const uuid = require('uuid/v4');
 
@@ -91,9 +92,9 @@ function render() {
 				<div className="CaptionArea">
 					When you read a very long caption and it just doesn't seem to end
 				</div>
-				<div className="Hand">
-					{cardItems}
-				</div>
+				<HandView
+					cards={cards}
+				/>
 			</div>
 	)
 }

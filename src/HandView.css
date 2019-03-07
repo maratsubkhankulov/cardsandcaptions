@@ -1,0 +1,9 @@
+.Hand {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+	background-color: #ffffff;
+  color: #444;
+	margin: 5px;
+}
+
