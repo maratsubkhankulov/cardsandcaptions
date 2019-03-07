@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './GameView.css';
 import { Game, Vote, Player } from './game';
 import { initGame, fillCardStacks, fillPlayers } from './game_utils';
+import AvatarView from './AvatarView.js';
 
 class GameView extends Component {
 	constructor(props) {
@@ -175,13 +176,14 @@ class GameView extends Component {
 				let className = `${isActive ? "PlayerSelected":""} ${isJudge ? "JudgeSelected":""}`;
 				let onClick=isActive ? null : () => this.selectPlayer(p.id, p.name)
 					return (
-						<b
-							className={className}
-							onClick={onClick}
+						<AvatarView
 							key={p.id}
-						>
-								{p.name}({p.points.length})
-						</b>
+							id={p.id}
+							name={p.name}
+							points={p.points.length}
+							selected={false}
+							imgUrl='https://source.unsplash.com/random/50x50'
+						/>
 					)
 			});
 
@@ -223,6 +225,9 @@ class GameView extends Component {
 		console.log(`Judges caption card: ${this.game.existsJudge() ? this.game.getCurrentJudge().captionCard : null}`);
     return (
       <div className="Game">
+				<div className="Header">
+					<div className="Timer">:07</div>
+				</div>
 				<div className="PlayerPanel">
 					{playerItems}
 				</div>

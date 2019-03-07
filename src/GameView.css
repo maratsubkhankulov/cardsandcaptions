@@ -1,21 +1,13 @@
 .PlayerPanel {
-  background-color: #00bbbb;
-	min-height: 40;
-	padding: 5px;
-}
-
-.PlayerSelected {
-	text-decoration: underline;
-}
-
-.JudgeSelected {
-	text-decoration: overline;
-}
-
-.CaptionArea {
-	background-color: #aaffaa;
-	height: 100px;
-	margin: 5px;
+  background-color: #000000;
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	grid-gap: 10px;
+	min-height: 40px;
+	padding-left: 10%;
+	padding-right: 10%;
+	padding-top: 1%;
+	padding-bottom: 1%;
 }
 
 .Table {
@@ -35,6 +27,20 @@
 	background-color: #ffaaaa;
   color: #444;
 	margin: 5px;
+}
+
+.CaptionArea {
+	background-color: #aaffaa;
+	height: 100px;
+	margin: 5px;
+}
+
+.PlayerSelected {
+	text-decoration: underline;
+}
+
+.JudgeSelected {
+	text-decoration: overline;
 }
 
 div.card {

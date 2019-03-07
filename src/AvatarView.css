@@ -1,0 +1,29 @@
+.Container {
+	margin: auto;
+	width: 50%;
+	position: relative;
+}
+
+.Score {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 9pt;
+	width: 15px;
+	height: 15px;
+	text-align: center;
+	z-index: 1000;
+	background-color: #55cc55;
+	color: #FFFFFF;
+	border-radius: 50%;
+}
+
+.Icon {
+	border-radius: 50%;
+	border: 1px solid white;
+}
+
+.Name {
+	color: #ffffff;
+	text-align: center;
+}

@@ -4,6 +4,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
 		let index = '/src/dev-index.js';
+		if (env.storybook) {
+			index = '/src/story-index.js';
+		} else
 		if (argv.mode === "production") {
 			index = '/src/index.js';
 		}
