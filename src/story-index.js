@@ -20,16 +20,14 @@ function render() {
 				id: '1',
 				name: 'Sam',
 				points: 2,
-				isJudge: true,
-				isActive: true,
+				selected: true,
 				imgUrl: 'https://source.unsplash.com/random/50x50',
 			},
 			{
 				id: '2',
 				name: 'Evelyn',
 				points: 12,
-				isJudge: false,
-				isActive: false,
+				selected: false,
 				imgUrl: 'https://source.unsplash.com/random/75x75',
 			}
 		]
@@ -64,7 +62,7 @@ function render() {
 							id={p.id}
 							name={p.name}
 							points={p.points}
-							selected={p.isActive}
+							selected={p.selected}
 							imgUrl='https://source.unsplash.com/random/75x75'
 						/>
 					)
