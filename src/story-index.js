@@ -53,6 +53,9 @@ function render() {
 				<div className="Banner">
 					Waiting for players to join...
 				</div>
+				<div className="CaptionArea">
+					When you read a very long caption and it just doesn't seem to end
+				</div>
 			</div>
 	)
 }

@@ -20,6 +20,17 @@
 	line-height: 90px;
 }
 
+.CaptionArea {
+	background-color: #ffffff;
+	color: #777777;
+	height: 100px;
+	font-size: 28pt;
+	min-height: 80px;
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px;
+}
+
 .Table {
 	background-color: #aaaaff;
   display: grid;
@@ -36,12 +47,6 @@
   grid-gap: 10px;
 	background-color: #ffaaaa;
   color: #444;
-	margin: 5px;
-}
-
-.CaptionArea {
-	background-color: #aaffaa;
-	height: 100px;
 	margin: 5px;
 }
 
