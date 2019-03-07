@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './AvatarView.css';
+import './CardView.css';
 
-class AvatarView extends Component {
+class CardView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -13,11 +13,11 @@ class AvatarView extends Component {
 
 	render() {
 		return (
-			<div key={this.state.id}>
-				<img src={this.state.imgUrl} alt={this.state.id} />
+			<div className="Card" key={this.state.id}>
+				<img className="Card" src={this.state.imgUrl} alt={this.state.id} />
 			</div>
 		)
 	}
 }
 
-export default AvatarView;
+export default CardView;
