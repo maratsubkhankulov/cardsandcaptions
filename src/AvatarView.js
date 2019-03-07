@@ -14,8 +14,13 @@ class AvatarView extends Component {
 	}
 
 	render() {
+	  let selectedBar = <div className="Unselected"/>;
+		if (this.state.selected) {
+			selectedBar = <div className="Selected"/>;
+		}
 		return (
 			<div className="Container">
+				{selectedBar}
 				<div className="Score">
 					{this.state.points}
 				</div>

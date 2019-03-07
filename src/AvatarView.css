@@ -4,9 +4,23 @@
 	position: relative;
 }
 
+.Selected {
+	width: 100%;
+	height: 7px;
+	margin-bottom: 10px;
+	background-color: #55bb55;
+}
+
+.Unselected {
+	width: 100%;
+	height: 7px;
+	margin-bottom: 10px;
+	background-color: none;
+}
+
 .Score {
 	position: absolute;
-	top: 0;
+	top: 12px;
 	right: 0;
 	font-size: 12pt;
 	width: 20px;

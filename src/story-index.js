@@ -19,8 +19,8 @@ function render() {
 				id: '1',
 				name: 'Sam',
 				points: 2,
-				isJudge: false,
-				isActive: false,
+				isJudge: true,
+				isActive: true,
 				imgUrl: 'https://source.unsplash.com/random/50x50',
 			},
 			{
