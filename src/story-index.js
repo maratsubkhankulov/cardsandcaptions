@@ -28,7 +28,7 @@ function render() {
 				points: 12,
 				isJudge: false,
 				isActive: false,
-				imgUrl: 'https://source.unsplash.com/random/50x50',
+				imgUrl: 'https://source.unsplash.com/random/75x75',
 			}
 		]
 		const playerItems = players.map((p) => {
@@ -40,10 +40,11 @@ function render() {
 							name={p.name}
 							points={p.points}
 							selected={p.isActive}
-							imgUrl='https://source.unsplash.com/random/50x50'
+							imgUrl='https://source.unsplash.com/random/75x75'
 						/>
 					)
 			});
+
 
 	return (
 			<div>
@@ -55,6 +56,8 @@ function render() {
 				</div>
 				<div className="CaptionArea">
 					When you read a very long caption and it just doesn't seem to end
+				</div>
+				<div className="Hand">
 				</div>
 			</div>
 	)
