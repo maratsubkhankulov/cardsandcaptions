@@ -8,20 +8,25 @@ class PlayerPanelView extends Component {
 		this.state = {
 			players: props.players,
 		}
+		console.log(this.state.players);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.setState({ players: nextProps.players });  
 	}
 
 	render() {
 		const playerItems = this.state.players.map((p) => {
-					return (
-						<AvatarView
-							key={p.id}
-							id={p.id}
-							name={p.name}
-							points={p.points}
-							selected={p.selected}
-							imgUrl={p.imgUrl}
-						/>
-					)
+			return (
+				<AvatarView
+					key={p.id}
+					id={p.id}
+					name={p.name}
+					points={p.points}
+					selected={p.selected}
+					imgUrl={p.imgUrl}
+				/>
+			)
 			});
 		return (
 			<div className="PlayerPanel">

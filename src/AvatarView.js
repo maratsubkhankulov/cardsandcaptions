@@ -13,6 +13,10 @@ class AvatarView extends Component {
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.setState({ players: nextProps.players });  
+	}
+
 	render() {
 	  let selectedBar = <div className="Unselected"/>;
 		if (this.state.selected) {

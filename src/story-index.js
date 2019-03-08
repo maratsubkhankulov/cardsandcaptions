@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './GameView.css';
-import AvatarView from './AvatarView.js';
 import CardView from './CardView.js';
 import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';

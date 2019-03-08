@@ -18,7 +18,6 @@ class CardView extends Component {
 			className = "SelectedCard"
 		}
 		let url = './img/card_back.jpg';
-		console.log(this.state.faceUp);
 		if (this.state.faceUp) {
 			url = this.state.imgUrl;
 		}

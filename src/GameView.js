@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import './GameView.css';
 import { Game, Vote, Player } from './game';
 import { initGame, fillCardStacks, fillPlayers } from './game_utils';
-import AvatarView from './AvatarView.js';
+import CardView from './CardView.js';
+import PlayerPanelView from './PlayerPanelView.js';
+import HandView from './HandView.js';
 
 class GameView extends Component {
 	constructor(props) {
@@ -46,13 +48,7 @@ class GameView extends Component {
 		this.socket.on('left-game', (data) => {
 			console.log(`Player ${data.playerId} joined`);
 			this.game.removePlayer(data.playerId);
-			this.setState(
-				(state, props) => {
-					return { players: view.game.players };
-				},
-				() => {
-					console.log('Updated player list');
-				});
+			this.onPlayersChanged(this.game.players);
 		});
 
 		this.socket.on('winner', (data) => {
@@ -85,6 +81,27 @@ class GameView extends Component {
 		});
 
 		fillCardStacks(this.game);
+	}
+
+	onPlayersChanged(gamePlayers) {
+		let newPlayers = this.state.players.map((p) => {
+				let isActive = this.isActivePlayer(p.id);
+				let isJudge = this.isJudgePlayer(p.id);
+				return {
+					id: p.id,
+					name: p.name,
+					points: p.points.length,
+					selected: isJudge,
+					imgUrl: 'https://source.unsplash.com/random/75x75',
+				}
+		});
+		this.setState(
+			(state, props) => {
+				return { players: newPlayers };
+			},
+			() => {
+				console.log('Updated player list');
+			});
 	}
 
 	sendSelectImageCard(playerId, cardId) {
@@ -170,6 +187,7 @@ class GameView extends Component {
 
   render() {
 		console.log("Render GameView");
+		/*
 		const playerItems = this.state.players.map((p) => {
 				let isActive = this.isActivePlayer(p.id);
 				let isJudge = this.isJudgePlayer(p.id);
@@ -221,28 +239,53 @@ class GameView extends Component {
 			)
 		}
 
+		{ this.game.existsJudge() && this.game.getCurrentJudge().captionCard ? this.game.getCurrentJudge().captionCard.caption : "no caption"}
+
 		console.log(`Judge exists: ${this.game.existsJudge()}`);
 		console.log(`Judges caption card: ${this.game.existsJudge() ? this.game.getCurrentJudge().captionCard : null}`);
+		
+*/
+		let cards = [
+			{
+				id: 1,
+				selected: true,
+				imgUrl: 'img/1.jpg',
+			},
+			{
+				id: 2,
+				selected: false,
+				imgUrl: 'img/2.jpg',
+			},
+			{
+				id: 3,
+				selected: false,
+				imgUrl: 'img/5.jpg',
+			},
+			{
+				id: 4,
+				selected: false,
+				imgUrl: 'img/4.jpg',
+			},
+		]
+
     return (
       <div className="Game">
 				<div className="Header">
 					<div className="Timer">:07</div>
 				</div>
-				<div className="PlayerPanel">
-					{playerItems}
+				<PlayerPanelView
+					players={this.state.players}
+				/>
+				<div className="Banner">
+					Waiting for players to join...
 				</div>
 				<div className="CaptionArea">
-					<div className="card">
-						{ this.game.existsJudge() && this.game.getCurrentJudge().captionCard ? this.game.getCurrentJudge().captionCard.caption : "no caption"}
-					</div>
+					When you read a very long caption and it just doesn't seem to end
 				</div>
-				<div className="Table">
-						{tableContent}
-				</div>
-				<div className="Hand">
-						{imageCardsContent}
-				</div>
-				{winnerView}
+				<HandView
+					cards={cards}
+					faceUp={false}
+				/>
 				<div className="Footer">
 					<h3>Debug:</h3>
 					<p>
