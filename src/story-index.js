@@ -72,6 +72,7 @@ function render() {
 				</div>
 				<HandView
 					cards={cards}
+					faceUp={true}
 				/>
 			</div>
 	)

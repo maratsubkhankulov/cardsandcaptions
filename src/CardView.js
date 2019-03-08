@@ -7,6 +7,7 @@ class CardView extends Component {
 		this.state = {
 			id: props.id,
 			selected: props.selected,
+			faceUp: props.faceUp,
 			imgUrl: props.imgUrl,
 		}
 	}
@@ -16,9 +17,14 @@ class CardView extends Component {
 		if (this.state.selected) {
 			className = "SelectedCard"
 		}
+		let url = './img/card_back.jpg';
+		console.log(this.state.faceUp);
+		if (this.state.faceUp) {
+			url = this.state.imgUrl;
+		}
 		return (
 			<div className={className} key={this.state.id}>
-				<img className={className} src={this.state.imgUrl} alt={this.state.id} />
+				<img className={className} src={url} alt={this.state.id} />
 			</div>
 		)
 	}
