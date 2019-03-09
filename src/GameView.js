@@ -6,6 +6,29 @@ import CardView from './CardView.js';
 import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
 
+function stateToBanner(gameState) {
+	switch (gameState) {
+		case 'WAIT_TO_START':
+			return 'Waiting for players to join...';
+			break;
+		case 'WAIT_FOR_JUDGE':
+			return 'Waiting for judge to be selected';
+			break;
+		case 'WAIT_FOR_VOTERS':
+			return 'Waiting for players to select cards';
+			break;
+		case 'WAIT_FOR_JUDGMENT':
+			return 'Waiting for judge to select a winner';
+			break;
+		case 'END_OF_TURN':
+			return 'End of turn';
+			break;
+		case 'END_OF_GAME':
+			return 'End of game';
+			break;
+	}
+}
+
 class GameView extends Component {
 	constructor(props) {
 		super(props);
@@ -13,6 +36,8 @@ class GameView extends Component {
 			playerId: props.playerId,
 			votes: [],
 			players: [],
+			caption: 'default caption',
+			bannerMessage: 'banner',
 			activePlayerId: null,
 			winner: null,
 		}
@@ -24,31 +49,19 @@ class GameView extends Component {
 	componentDidMount() {
 		const view = this;
 
-		this.setState(
-			(state, props) => {
-				return { players: view.game.players};
-			},
-			() => {
-				console.log('Updated player list');
-			});
+		this.onGameSynced(this.game);
 
 		this.socket.on('joined-game', (data) => {
 			console.log(`Player ${data.playerId} joined`);
 			this.game.sync(data.gameState);
 			let view = this;
-			this.setState(
-				(state, props) => {
-					return { players: view.game.players};
-				},
-				() => {
-					console.log('Updated player list');
-				});
+			this.onGameSynced(this.game);
 		});
 
 		this.socket.on('left-game', (data) => {
 			console.log(`Player ${data.playerId} joined`);
 			this.game.removePlayer(data.playerId);
-			this.onPlayersChanged(this.game.players);
+			this.onGameSynced(this.game);
 		});
 
 		this.socket.on('winner', (data) => {
@@ -83,8 +96,9 @@ class GameView extends Component {
 		fillCardStacks(this.game);
 	}
 
-	onPlayersChanged(gamePlayers) {
-		let newPlayers = this.state.players.map((p) => {
+	onGameSynced(game) {
+		let players = game.players;
+		let newPlayers = players.map((p) => {
 				let isActive = this.isActivePlayer(p.id);
 				let isJudge = this.isJudgePlayer(p.id);
 				return {
@@ -95,12 +109,21 @@ class GameView extends Component {
 					imgUrl: 'https://source.unsplash.com/random/75x75',
 				}
 		});
+		let newCaption = game.existsJudge() && game.getCurrentJudge().captionCard ?
+			game.getCurrentJudge().captionCard.caption : "no caption";
+
+		let newBannerMessage = stateToBanner(game.getState());
+
 		this.setState(
 			(state, props) => {
-				return { players: newPlayers };
+				return {
+					players: newPlayers,
+					caption: newCaption,
+					bannerMessage: newBannerMessage,
+				};
 			},
 			() => {
-				console.log('Updated player list');
+				console.log('Updated state list');
 			});
 	}
 
@@ -277,10 +300,10 @@ class GameView extends Component {
 					players={this.state.players}
 				/>
 				<div className="Banner">
-					Waiting for players to join...
+					{this.state.bannerMessage}
 				</div>
 				<div className="CaptionArea">
-					When you read a very long caption and it just doesn't seem to end
+					{this.state.caption}
 				</div>
 				<HandView
 					cards={cards}
