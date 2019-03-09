@@ -11,6 +11,7 @@ class App extends Component {
 			gameState: null,
 			playerId: props.playerId,
 			playerName: props.playerName,
+			playerImgUrl: props.playerImgUrl,
 			activeGamesStates: {},
 		}
 
@@ -46,6 +47,7 @@ class App extends Component {
 		this.socket.emit('create-game', {
 			playerId: this.state.playerId,
 			playerName: this.state.playerName,
+			playerImgUrl: this.state.playerImgUrl,
 		});
 	}
 
@@ -54,6 +56,7 @@ class App extends Component {
 			gameId: gameId,
 			playerId: this.state.playerId,
 			playerName: this.state.playerName,
+			playerImgUrl: this.state.playerImgUrl,
 		});
 	}
 

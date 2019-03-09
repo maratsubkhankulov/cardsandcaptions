@@ -106,7 +106,7 @@ class GameView extends Component {
 					name: p.name,
 					points: p.points.length,
 					selected: isJudge,
-					imgUrl: 'https://source.unsplash.com/random/75x75',
+					imgUrl: p.imgUrl,
 				}
 		});
 		let newCaption = game.existsJudge() && game.getCurrentJudge().captionCard ?

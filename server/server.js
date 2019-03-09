@@ -45,7 +45,8 @@ io.on('connection', function (socket) {
 
 		// Update mappings
 		let playerId = data.playerId;
-		let player = new Player(data.playerId, data.playerName); // TODO dedupe with join-game
+	  // TODO dedupe with join-game
+		let player = new Player(data.playerId, data.playerName, data.playerImgUrl);
 		games[gameId].addPlayer(player);
 
 		clientGameMap[clientId] = gameId;
@@ -63,7 +64,7 @@ io.on('connection', function (socket) {
 		let gameId = data.gameId;
 		let playerId = data.playerId;
 
-		let player = new Player(data.playerId, data.playerName);
+		let player = new Player(data.playerId, data.playerName, data.playerImgUrl);
 		games[gameId].addPlayer(player);
 		clientPlayerMap[clientId] = playerId;
 		clientGameMap[clientId] = gameId;

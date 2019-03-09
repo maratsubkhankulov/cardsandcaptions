@@ -7,9 +7,10 @@ export class Vote {
 
 export class Player {
 	static maxHandSize() { return 4; } // image cards are held by player
-	constructor(id, name) {
+	constructor(id, name, imgUrl) {
 		this.id = id;
 		this.name = name;
+		this.imgUrl = imgUrl;
 		this.hand = []; // Cards in hand
 		this.captionCard = null; // Current caption
 		this.points = []; // Caption hands won
@@ -21,6 +22,7 @@ export class Player {
 
 		p.id = object.id;
 		p.name = object.name;
+		p.imgUrl = object.imgUrl;
 
 		p.hand = [];
 		for (var i = 0; i < object.hand.length; i++) {
