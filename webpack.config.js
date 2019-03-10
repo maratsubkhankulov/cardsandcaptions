@@ -29,7 +29,7 @@ module.exports = (env, argv) => {
 								test: /\.js$|\.jsx$/,
 								loader: 'babel-loader',
 								query: {
-									presets: ['es2015', 'react']
+									presets: ['react', 'env']
 								}
 						},
 						{
