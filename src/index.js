@@ -24,7 +24,7 @@ function start() {
 			playerId={window.FBInstant.player.getID()}
 			playerName={window.FBInstant.player.getName()}
 			playerImgUrl={window.FBInstant.player.getPhoto()}
-			server="https://like-llama.glitch.me"
+			server="https://memegame-server.herokuapp.com/"
 			fbinstant={window.FBInstant}
 		/>, document.getElementById('root'))
 }
