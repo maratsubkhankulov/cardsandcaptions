@@ -11,6 +11,13 @@ class HandView extends Component {
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			cards: nextProps.cards,
+			faceUp: nextProps.faceUp,
+		});  
+	}
+
 	render() {
 		const view = this;
 		const cardItems = this.state.cards.map((c) => {

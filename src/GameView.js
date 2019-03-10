@@ -36,8 +36,10 @@ class GameView extends Component {
 			playerId: props.playerId,
 			votes: [],
 			players: [],
-			caption: 'default caption',
-			bannerMessage: 'banner',
+			hand: [],
+			showCards: false,
+			caption: '[empty caption]',
+			bannerMessage: '[empty banner]',
 			activePlayerId: null,
 			winner: null,
 		}
@@ -77,6 +79,7 @@ class GameView extends Component {
 				},
 				() => {
 					console.log('Updated player list');
+					view.selectPlayer(this.state.playerId);
 				});
 		});
 
@@ -114,16 +117,55 @@ class GameView extends Component {
 
 		let newBannerMessage = stateToBanner(game.getState());
 
+		const hand = this.game.getPlayer(this.state.playerId).hand;
+		let newHand = [
+			{
+				id: 1,
+				selected: false,
+				imgUrl: 'img/1.jpg',
+			},
+			{
+				id: 2,
+				selected: false,
+				imgUrl: 'img/2.jpg',
+			},
+			{
+				id: 3,
+				selected: false,
+				imgUrl: 'img/5.jpg',
+			},
+			{
+				id: 4,
+				selected: false,
+				imgUrl: 'img/4.jpg',
+			},
+		]
+		if (hand.length > 0) {
+			newHand = hand.map((card) => {
+				// TODO create onClick listener
+				// onClick={() => this.selectImageCard(card.id)}>
+				return {
+					id: card.id,
+					selected: false,
+					imgUrl: card.img,
+				}
+			});
+		}
+
+		const showCards = this.game.getState() !== 'WAIT_TO_START';
+
 		this.setState(
 			(state, props) => {
 				return {
 					players: newPlayers,
 					caption: newCaption,
 					bannerMessage: newBannerMessage,
+					hand: newHand,
+					showCards: showCards,
 				};
 			},
 			() => {
-				console.log('Updated state list');
+				console.log('Updated state');
 			});
 	}
 
@@ -148,14 +190,7 @@ class GameView extends Component {
 
 	initGame() {
 		let view = this;
-		this.setState(
-			(state, props) => {
-				return { players: this.game.players };
-			},
-			() => {
-				console.log(`Updated players.`);
-				view.selectPlayer(this.state.playerId);
-			});
+		this.onGameSynced(this.game);
 	}
 
 	sync() {
@@ -268,29 +303,6 @@ class GameView extends Component {
 		console.log(`Judges caption card: ${this.game.existsJudge() ? this.game.getCurrentJudge().captionCard : null}`);
 		
 */
-		let cards = [
-			{
-				id: 1,
-				selected: true,
-				imgUrl: 'img/1.jpg',
-			},
-			{
-				id: 2,
-				selected: false,
-				imgUrl: 'img/2.jpg',
-			},
-			{
-				id: 3,
-				selected: false,
-				imgUrl: 'img/5.jpg',
-			},
-			{
-				id: 4,
-				selected: false,
-				imgUrl: 'img/4.jpg',
-			},
-		]
-
     return (
       <div className="Game">
 				<div className="Header">
@@ -306,8 +318,8 @@ class GameView extends Component {
 					{this.state.caption}
 				</div>
 				<HandView
-					cards={cards}
-					faceUp={false}
+					cards={this.state.hand}
+					faceUp={this.state.showCards}
 				/>
 				<div className="Footer">
 					<h3>Debug:</h3>

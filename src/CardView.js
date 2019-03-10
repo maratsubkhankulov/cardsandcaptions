@@ -12,6 +12,14 @@ class CardView extends Component {
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			selected: nextProps.selected,
+			faceUp: nextProps.faceUp,
+			imgUrl: nextProps.imgUrl,
+		});  
+	}
+
 	render() {
 		let className = "Card"
 		if (this.state.selected) {
