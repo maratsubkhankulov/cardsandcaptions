@@ -34,8 +34,8 @@
 
 .Icon {
 	border-radius: 50%;
-	min-height: 75px;
-	min-width: 75px;
+	height: 75px;
+	width: 75px;
 	border: 1px solid white;
 }
 
