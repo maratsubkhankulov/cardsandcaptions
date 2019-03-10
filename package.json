@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --mode development --open --hot",
     "storybook": "webpack-dev-server --mode development --env.storybook --open --hot",
     "build": "webpack --mode production",
-		"server": "node server/index.js",
+    "server": "node server/index.js",
     "zip": "zip -r dist.zip dist"
   },
   "repository": {
@@ -34,10 +34,10 @@
     "socket.io-client": "^2.2.0",
     "uuid": "^3.3.2"
   },
-	"engines": {
-		"node": "11.9.0",
-		"npm": "6.5.0"
-	},
+  "engines": {
+    "node": "11.9.0",
+    "npm": "6.5.0"
+  },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
