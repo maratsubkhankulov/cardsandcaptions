@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.js';
 
+console.log('index loading');
 window.onload = function () {
 	console.log('onload')
 	window.FBInstant.initializeAsync().then(function() {

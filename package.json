@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot",
+    "start.heroku": "webpack-dev-server --mode production --open --hot",
     "storybook": "webpack-dev-server --mode development --env.storybook --open --hot",
     "build": "webpack --mode production",
     "server": "node server/index.js",
