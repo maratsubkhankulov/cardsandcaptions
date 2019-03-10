@@ -29,6 +29,35 @@ function stateToBanner(gameState) {
 	}
 }
 
+function defaultHand() {
+		return [
+			{
+				id: 1,
+				selected: false,
+				imgUrl: 'img/1.jpg',
+				onClick: (id) => view.selectImageCard(id),
+			},
+			{
+				id: 2,
+				selected: false,
+				imgUrl: 'img/2.jpg',
+				onClick: (id) => view.selectImageCard(id),
+			},
+			{
+				id: 3,
+				selected: false,
+				imgUrl: 'img/5.jpg',
+				onClick: (id) => view.selectImageCard(id),
+			},
+			{
+				id: 4,
+				selected: false,
+				imgUrl: 'img/4.jpg',
+				onClick: (id) => view.selectImageCard(id),
+			},
+		]
+}
+
 class GameView extends Component {
 	constructor(props) {
 		super(props);
@@ -101,6 +130,10 @@ class GameView extends Component {
 	onGameSynced(game) {
 		const view = this;
 
+	  let iAmJudge = view.isJudgePlayer(game, this.state.playerId);
+		const state = game.getState();
+		const showCards = (iAmJudge && state === 'WAIT_FOR_JUDGMENT') || (!iAmJudge && state !== 'WAIT_TO_START');
+
 		let players = game.players;
 		let newPlayers = players.map((p) => {
 				let isJudge = view.isJudgePlayer(game, p.id);
@@ -117,45 +150,32 @@ class GameView extends Component {
 
 		let newBannerMessage = stateToBanner(game.getState());
 
-		const hand = this.game.getPlayer(this.state.playerId).hand;
-		let newHand = [
-			{
-				id: 1,
-				selected: false,
-				imgUrl: 'img/1.jpg',
-				onClick: (id) => view.selectImageCard(id),
-			},
-			{
-				id: 2,
-				selected: false,
-				imgUrl: 'img/2.jpg',
-				onClick: (id) => view.selectImageCard(id),
-			},
-			{
-				id: 3,
-				selected: false,
-				imgUrl: 'img/5.jpg',
-				onClick: (id) => view.selectImageCard(id),
-			},
-			{
-				id: 4,
-				selected: false,
-				imgUrl: 'img/4.jpg',
-				onClick: (id) => view.selectImageCard(id),
-			},
-		]
-		if (hand.length > 0) {
-			newHand = hand.map((card) => {
+		let newHand = defaultHand();
+		if (iAmJudge) {
+			const me = game.getPlayer(this.state.playerId);
+			const votes = me.votes;
+			newHand = votes.map((vote) => {
+				const card = vote.card;
 				return {
 					id: card.id,
 					selected: false,
 					imgUrl: card.img,
-				  onClick: (id) => view.selectImageCard(id),
+					onClick: (id) => view.selectWinningCard(vote),
 				}
 			});
+		} else {
+			const hand = game.getPlayer(this.state.playerId).hand;
+			if (hand.length > 0) {
+				newHand = hand.map((card) => {
+					return {
+						id: card.id,
+						selected: false,
+						imgUrl: card.img,
+						onClick: (id) => view.selectImageCard(id),
+					}
+				});
+			}
 		}
-
-		const showCards = this.game.getState() !== 'WAIT_TO_START';
 
 		this.setState(
 			(state, props) => {
@@ -214,7 +234,7 @@ class GameView extends Component {
 
 	selectWinningCard(vote) {
 		this.sendSelectWinningCard(
-			this.state.activePlayerId,
+			this.state.playerId,
 			vote.player.id,
 			vote.card.id);
 	}
