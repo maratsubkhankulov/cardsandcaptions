@@ -13,8 +13,13 @@ class AvatarView extends Component {
 		}
 	}
 
-	componentWillReceiveProps(nextProps) {
-		this.setState({ players: nextProps.players });  
+	componentWillReceiveProps(props) {
+		this.setState({
+			name: props.name,
+			selected: props.selected,
+			points: props.points,
+			imgUrl: props.imgUrl,
+		});  
 	}
 
 	render() {

@@ -28,6 +28,7 @@ class HandView extends Component {
 					selected={c.selected}
 					faceUp={view.state.faceUp}
 					imgUrl={c.imgUrl}
+					onClick={c.onClick}
 				/>
 			)
 		});

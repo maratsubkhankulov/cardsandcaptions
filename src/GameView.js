@@ -55,15 +55,14 @@ class GameView extends Component {
 
 		this.socket.on('joined-game', (data) => {
 			console.log(`Player ${data.playerId} joined`);
-			this.game.sync(data.gameState);
-			let view = this;
-			this.onGameSynced(this.game);
+			view.game.sync(data.gameState);
+			view.onGameSynced(view.game);
 		});
 
 		this.socket.on('left-game', (data) => {
 			console.log(`Player ${data.playerId} joined`);
-			this.game.removePlayer(data.playerId);
-			this.onGameSynced(this.game);
+			view.game.removePlayer(data.playerId);
+			view.onGameSynced(view.game);
 		});
 
 		this.socket.on('winner', (data) => {
@@ -86,24 +85,25 @@ class GameView extends Component {
 		this.socket.on('sync', function(game) {
 			console.log(`Sync game`);
 			view.game.sync(game);
-			view.sync();
+			view.onGameSynced(view.game);
 		});
 
 		this.socket.on('init-game', function(game) {
 			console.log('init-game');
 		  console.log(`Game state: ${JSON.stringify(game)}`);
 			view.game.sync(game);
-			view.initGame();
+			view.onGameSynced(view.game);
 		});
 
 		fillCardStacks(this.game);
 	}
 
 	onGameSynced(game) {
+		const view = this;
+
 		let players = game.players;
 		let newPlayers = players.map((p) => {
-				let isActive = this.isActivePlayer(p.id);
-				let isJudge = this.isJudgePlayer(p.id);
+				let isJudge = view.isJudgePlayer(game, p.id);
 				return {
 					id: p.id,
 					name: p.name,
@@ -123,31 +123,34 @@ class GameView extends Component {
 				id: 1,
 				selected: false,
 				imgUrl: 'img/1.jpg',
+				onClick: (id) => view.selectImageCard(id),
 			},
 			{
 				id: 2,
 				selected: false,
 				imgUrl: 'img/2.jpg',
+				onClick: (id) => view.selectImageCard(id),
 			},
 			{
 				id: 3,
 				selected: false,
 				imgUrl: 'img/5.jpg',
+				onClick: (id) => view.selectImageCard(id),
 			},
 			{
 				id: 4,
 				selected: false,
 				imgUrl: 'img/4.jpg',
+				onClick: (id) => view.selectImageCard(id),
 			},
 		]
 		if (hand.length > 0) {
 			newHand = hand.map((card) => {
-				// TODO create onClick listener
-				// onClick={() => this.selectImageCard(card.id)}>
 				return {
 					id: card.id,
 					selected: false,
 					imgUrl: card.img,
+				  onClick: (id) => view.selectImageCard(id),
 				}
 			});
 		}
@@ -188,11 +191,6 @@ class GameView extends Component {
 		});
 	}
 
-	initGame() {
-		let view = this;
-		this.onGameSynced(this.game);
-	}
-
 	sync() {
 		this.setState(
 			(state, props) => {
@@ -208,10 +206,10 @@ class GameView extends Component {
 	}
 
 	selectImageCard(id) {
-		this.sendSelectImageCard(this.state.activePlayerId, id);
-		if (!this.state.activePlayerId) {
+		if (!this.state.playerId) {
 			throw "No active player, can't select card."
 		}
+		this.sendSelectImageCard(this.state.playerId, id);
 	}
 
 	selectWinningCard(vote) {
@@ -236,9 +234,10 @@ class GameView extends Component {
 		return this.state.activePlayerId === id
 	}
 
-	isJudgePlayer(id) {
-		if (this.game.existsJudge()) {
-		 	return this.game.getCurrentJudge().id === id;
+	isJudgePlayer(game, id) {
+		if (game.existsJudge()) {
+			console.log(`is judge: ${game.getCurrentJudge().id}, ${id}, ${game.getCurrentJudge().id === id}`); 
+		 	return game.getCurrentJudge().id === id;
 		}
 		return false;
 	}

@@ -9,7 +9,9 @@ class CardView extends Component {
 			selected: props.selected,
 			faceUp: props.faceUp,
 			imgUrl: props.imgUrl,
+			onClick: props.onClick,
 		}
+		this.onClick = this.onClick.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -18,6 +20,10 @@ class CardView extends Component {
 			faceUp: nextProps.faceUp,
 			imgUrl: nextProps.imgUrl,
 		});  
+	}
+
+	onClick() {
+		this.state.onClick(this.state.id);
 	}
 
 	render() {
@@ -30,7 +36,7 @@ class CardView extends Component {
 			url = this.state.imgUrl;
 		}
 		return (
-			<div className={className} key={this.state.id}>
+			<div className={className} key={this.state.id} onClick={this.onClick}>
 				<img className={className} src={url} alt={this.state.id} />
 			</div>
 		)

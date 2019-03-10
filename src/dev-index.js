@@ -12,7 +12,7 @@ window.onload = function () {
 			playerId={id}
 			playerName={name}
 			playerImgUrl="https://source.unsplash.com/random/75x75"
-			server="https://memegame-server.herokuapp.com"
-			//"http://localhost:4000"
+			//server="https://memegame-server.herokuapp.com"
+			server="http://localhost:4000"
 		/>, document.getElementById('root'))
 }
