@@ -6,7 +6,7 @@ import CardView from './CardView.js';
 import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
 
-function stateToBanner(gameState) {
+function stateToBanner(gameState, iAmJudge) {
 	switch (gameState) {
 		case 'WAIT_TO_START':
 			return 'Waiting for players to join...';
@@ -18,7 +18,11 @@ function stateToBanner(gameState) {
 			return 'Waiting for players to select cards';
 			break;
 		case 'WAIT_FOR_JUDGMENT':
-			return 'Waiting for judge to select a winner';
+			if (iAmJudge) {
+				return 'Select a winning card!';
+			} else {
+				return 'Waiting for judge to select a winner';
+			}
 			break;
 		case 'END_OF_TURN':
 			return 'End of turn';
@@ -148,7 +152,7 @@ class GameView extends Component {
 		let newCaption = game.existsJudge() && game.getCurrentJudge().captionCard ?
 			game.getCurrentJudge().captionCard.caption : "no caption";
 
-		let newBannerMessage = stateToBanner(game.getState());
+		let newBannerMessage = stateToBanner(game.getState(), iAmJudge);
 
 		let newHand = defaultHand();
 		if (iAmJudge) {
@@ -174,6 +178,30 @@ class GameView extends Component {
 						onClick: (id) => view.selectImageCard(id),
 					}
 				});
+			}
+			if (state === 'WAIT_FOR_VOTERS' || state === 'WAIT_FOR_JUDGMENT') {
+				// If votes hold my vote, just select that card in my hand
+				const judge = game.getCurrentJudge();
+				const votes = judge.votes;
+
+				let vote;
+				for (var i = 0; i < votes.length; i++) {
+					vote = votes[i];
+					if (vote.player.id === view.state.playerId) {
+						break;
+					}
+				}
+
+				if (vote) {
+					newHand = view.state.hand.slice();
+					// Find and select card
+					for (var i = 0; i < newHand.length; i++) {
+						if (newHand[i].id === vote.card.id) {
+							newHand[i].selected = true;
+							break;
+						}
+					}
+				}
 			}
 		}
 
