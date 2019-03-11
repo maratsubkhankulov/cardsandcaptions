@@ -100,15 +100,24 @@ class App extends Component {
 			)
 		}
 
-		let gamesListView = Object.keys(this.state.activeGamesStates).map((key, index) => {
-			let gameId = key;
-			return <div key={gameId} onClick={() => this.joinGame(gameId)}> {gameId} </div>
-		});
+
+		let gamesListView;
+		if (!gameView) {
+			const list = Object.keys(this.state.activeGamesStates).map((key, index) => {
+				let gameId = key;
+				return <div key={gameId} onClick={() => this.joinGame(gameId)}> {gameId} </div>
+			});
+			gamesListView = (
+				<div>
+					<h4>{this.state.playerName}</h4>
+					<div onClick={() => this.createGame()}>Create game</div>
+					{list}
+				</div>
+			);
+		}
 
     return (
       <div className="App">
-				<h4>{this.state.playerName}</h4>
-				<div onClick={() => this.createGame()}>Create game</div>
 				{gamesListView}
 				{gameView}
 			</div>

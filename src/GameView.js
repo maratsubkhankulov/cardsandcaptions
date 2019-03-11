@@ -368,13 +368,6 @@ class GameView extends Component {
 					cards={this.state.hand}
 					faceUp={this.state.showCards}
 				/>
-				<div className="Footer">
-					<h3>Debug:</h3>
-					<p>
-						State: {this.game.getState()}
-					</p>
-					# Players: {this.game.players.length} Caption stack: {this.game.caption_stack.length} Image stack: {this.game.image_stack.length} Turn number: {this.game.turn_number} Current judge: {this.game.currentJudge}
-				</div>
       </div>
     );
   }
