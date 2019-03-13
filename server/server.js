@@ -114,7 +114,9 @@ io.on('connection', function (socket) {
 				socket.broadcast.to(gameId).emit('winner', winningVote);
 			}
 		}
+		console.log('sync caller');
 		socket.emit('sync', game);
+		console.log('sync others');
 		socket.broadcast.to(gameId).emit('sync', game);
 	});
 

@@ -34,6 +34,7 @@ function stateToBanner(gameState, iAmJudge) {
 }
 
 function defaultHand() {
+		let view = this;
 		return [
 			{
 				id: 1,
