@@ -4,6 +4,10 @@ import App from './App.js';
 
 const uuid = require('uuid/v4');
 
+function invitePlayers() {
+	console.log('Invite players');
+}
+
 window.onload = function () {
 	let id = uuid();
 	let name = `User_${id.substring(0,1)}`;
@@ -15,5 +19,6 @@ window.onload = function () {
 			//server="https://memegame-server.herokuapp.com"
 			server="http://localhost:4000"
 			contextId="dev-context"
+			invitePlayers={invitePlayers}
 		/>, document.getElementById('root'))
 }

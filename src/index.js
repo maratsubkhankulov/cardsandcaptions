@@ -17,6 +17,23 @@ window.onload = function () {
 	});
 }
 
+function invitePlayers() {
+	window.FBInstant.updateAsync({
+		action: 'CUSTOM',
+		cta: 'Play',
+		text: {
+			default: 'Join the meme game now',
+			localizations: {
+				en_US: 'Join the meme game now',
+			}
+		}
+		template: 'play_turn',
+		data: { myReplayData: '...' },
+		strategy: 'IMMEDIATE',
+		notification: 'NO_PUSH'
+	});
+}
+
 function start() {
 	console.log('Start');
 
@@ -27,6 +44,6 @@ function start() {
 			playerImgUrl={window.FBInstant.player.getPhoto()}
 			contextId={window.FBInstant.context.getID()}
 			server="https://memegame-server.herokuapp.com/"
-			fbinstant={window.FBInstant}
+			invitePlayers={invitePlayers}
 		/>, document.getElementById('root'))
 }

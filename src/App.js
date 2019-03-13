@@ -18,10 +18,12 @@ class App extends Component {
 
 		let app = this;
 		let host = props.server;
+		this.invitePlayers = props.invitePlayers;
 		this.socket = socketIOClient(host, function() { console.log(`Connected to ${host}`)});
 		//TODO refactor into socket client interface
 		this.socket.on('game-created', function(data) {
 			console.log(`server: game-created with id ${data.gameState.id}`);
+			app.invitePlayers();
 			app.createdGame(data);
 		});
 
