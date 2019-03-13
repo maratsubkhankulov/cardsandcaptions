@@ -26,7 +26,7 @@ function invitePlayers() {
 			localizations: {
 				en_US: 'Join the meme game now',
 			}
-		}
+		},
 		template: 'play_turn',
 		data: { myReplayData: '...' },
 		strategy: 'IMMEDIATE',
