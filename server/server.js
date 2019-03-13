@@ -64,17 +64,25 @@ io.on('connection', function (socket) {
 		let gameId = data.gameId;
 		let playerId = data.playerId;
 
-		let player = new Player(data.playerId, data.playerName, data.playerImgUrl);
-		games[gameId].addPlayer(player);
+		let player = games[gameId].getPlayer(playerId);
+		if (!player) {
+			player = new Player(data.playerId, data.playerName, data.playerImgUrl);
+			games[gameId].addPlayer(player);
+			console.log(`Player ${playerId} joined ${gameId}`)
+		} else {
+			console.log(`Player ${playerId} rejoined ${gameId}`)
+		}
 		clientPlayerMap[clientId] = playerId;
 		clientGameMap[clientId] = gameId;
-
-		console.log(`Player ${playerId} joined ${gameId}`)
 
 		socket.join(gameId);
 		socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
 		socket.broadcast.to(gameId).emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
 
+	});
+
+	socket.on('start-game', function(data) {
+		const gameId = data.gameId;
 		// Check to start
 		const minPlayers = Game.minPlayers();
 		if (games[gameId].players.length >= minPlayers) {
@@ -115,9 +123,9 @@ io.on('connection', function (socket) {
 		let playerId = clientPlayerMap[clientId];
 		console.log(`${gameId} ${playerId}`);
 		if (gameId && playerId) {
-			console.log('left game');
+			console.log(`Left game ${playerId}`);
 			socket.broadcast.to(gameId).emit('left-game', { gameId: gameId, playerId: playerId });
-			delete games[gameId].players[playerId];
+			games[gameId].removePlayer(playerId);
 		}
 	});
 });
