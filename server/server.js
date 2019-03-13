@@ -130,6 +130,11 @@ io.on('connection', function (socket) {
 			console.log(`Left game ${playerId}`);
 			socket.broadcast.to(gameId).emit('left-game', { gameId: gameId, playerId: playerId });
 			games[gameId].removePlayer(playerId);
+			delete clientPlayerMap[clientId];
+			if (games[gameId].players.length === 0) {
+				delete games[gameId];
+				delete clientGameMap[clientId];
+			}
 		}
 	});
 });
