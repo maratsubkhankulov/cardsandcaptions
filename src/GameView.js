@@ -79,6 +79,8 @@ class GameView extends Component {
 		this.socket = props.socket;
 		this.game = new Game();
 		this.game.sync(props.gameState);
+
+		this.sendStart = this.sendStart.bind(this);
 	}
 
 	componentDidMount() {
@@ -220,6 +222,13 @@ class GameView extends Component {
 			});
 	}
 
+	sendStart() {
+		console.log('-> startGame');
+		this.socket.emit('start-game', {
+			playerId: this.state.playerId,
+		});
+	}
+
 	sendSelectImageCard(playerId, cardId) {
 		console.log('-> sendSelectImagecard');
 		this.socket.emit('actuate', {
@@ -350,10 +359,20 @@ class GameView extends Component {
 		console.log(`Judges caption card: ${this.game.existsJudge() ? this.game.getCurrentJudge().captionCard : null}`);
 		
 */
+		let startButton;
+		if (this.game.getState() === 'WAIT_TO_START' &&
+			this.game.players.length >= Game.minPlayers()) {
+			startButton = (
+				<div onClick={this.sendStart}>
+					Start game
+				</div>
+			)
+		}
     return (
       <div className="Game">
 				<div className="Header">
 					<div className="Timer">:07</div>
+					{startButton}
 				</div>
 				<PlayerPanelView
 					players={this.state.players}

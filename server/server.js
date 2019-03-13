@@ -82,7 +82,7 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('start-game', function(data) {
-		const gameId = data.gameId;
+		const gameId = clientGameMap[clientId];
 		// Check to start
 		const minPlayers = Game.minPlayers();
 		if (games[gameId].players.length >= minPlayers) {
@@ -91,6 +91,8 @@ io.on('connection', function (socket) {
 			initGame(games[gameId]);
 			socket.emit('init-game', games[gameId]);
 			socket.broadcast.to(gameId).emit('init-game', games[gameId]);
+		} else {
+			console.log("There are not enough players to start game");
 		}
 	});
 
