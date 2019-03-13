@@ -38,7 +38,7 @@ io.on('connection', function (socket) {
 	socket.on('create-game', function(data) {
 
 		// Create game
-		let gameId = uuid();
+		let gameId = data.contextId;
 		socket.join(gameId);
 
 		games[gameId] = new Game(gameId);

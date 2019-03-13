@@ -12,6 +12,7 @@ class App extends Component {
 			playerId: props.playerId,
 			playerName: props.playerName,
 			playerImgUrl: props.playerImgUrl,
+			contextId: props.contextId,
 			activeGamesStates: {},
 		}
 
@@ -30,6 +31,10 @@ class App extends Component {
 		});
 
 		this.socket.on('active-games', function(data) {
+			if (app.state.contextId in data.games) {
+				app.joinGame(app.state.contextId);
+				return;
+			}
 			app.setState(
 				(state, props) => {
 					return { activeGamesStates: data.games }
@@ -48,6 +53,7 @@ class App extends Component {
 			playerId: this.state.playerId,
 			playerName: this.state.playerName,
 			playerImgUrl: this.state.playerImgUrl,
+			contextId: this.state.contextId,
 		});
 	}
 
@@ -110,6 +116,7 @@ class App extends Component {
 			gamesListView = (
 				<div>
 					<h4>{this.state.playerName}</h4>
+					<h5>Context id: {this.state.contextId}</h5>
 					<div onClick={() => this.createGame()}>Create game</div>
 					{list}
 				</div>
