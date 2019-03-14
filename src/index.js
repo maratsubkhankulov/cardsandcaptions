@@ -17,21 +17,72 @@ window.onload = function () {
 	});
 }
 
+/*
 function invitePlayers() {
+	console.log('send invite');
 	window.FBInstant.updateAsync({
 		action: 'CUSTOM',
 		cta: 'Play',
 		text: {
-			default: 'Join the meme game now',
+			default: 'Player has invited you to play the Meme Game. Join them!',
 			localizations: {
-				en_US: 'Join the meme game now',
+				en_US: 'Player has invited you to play the Meme Game. Join them!',
 			}
 		},
-		template: 'play_turn',
-		data: { myReplayData: '...' },
+		template: 'invite',
+		data: { },
 		strategy: 'IMMEDIATE',
 		notification: 'NO_PUSH'
 	});
+}
+*/
+function invitePlayers() {
+	let player = window.FBInstant.player.getName();
+	let payload = {
+		action: 'CUSTOM',
+		cta: 'Join them!',
+		text: {
+			default: player + ' has invited you to play.',
+			localizations: {
+				en_US: player + ' has invited you to play.'
+			}
+		},
+		template: 'invite',
+		data: { myCustomData: '42' },
+		strategy: 'IMMEDIATE',
+		notification: 'NO_PUSH'
+	};
+
+	toDataURL(
+		'./img/card_back.jpg',
+		function(dataUrl) {
+			payload.image = dataUrl;
+			// This will post a custom update.
+			// If the game is played in a messenger chat thread,
+			// this will post a message into the thread with the specified image and text message.
+			// When others launch the game from this message,
+			// those game sessions will be able to access the specified blob
+			// of data through FBInstant.getEntryPointData()
+			window.FBInstant.updateAsync(payload).then(function() {
+				console.log('Message was posted!');
+			}).catch(function(error) {
+				console.log('Message was not posted: ' + error.message);
+			});
+		}
+	);
+}
+
+function toDataURL(src, callback) {
+	let img = new Image();
+	img.crossOrigin = 'Anonymous';
+	img.onload = function() {
+		let canvas = document.createElement('CANVAS');
+		canvas.height = 960;
+		canvas.width = 960;
+		canvas.getContext('2d').drawImage(this, 0, 0, 960, 960);
+		callback(canvas.toDataURL());
+	};
+	img.src = src;
 }
 
 function start() {

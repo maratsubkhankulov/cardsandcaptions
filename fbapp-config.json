@@ -1,8 +1,8 @@
 {
   "instant_games": {
     "custom_update_templates": {
-      "first_place": {
-        "example": "Player X just became the first place in the meme game!"
+      "invite": {
+        "example": "Alice has started a game. Join them!"
       }
     },
     "bot": {
