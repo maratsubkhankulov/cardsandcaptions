@@ -23,7 +23,6 @@ class App extends Component {
 		//TODO refactor into socket client interface
 		this.socket.on('game-created', function(data) {
 			console.log(`server: game-created with id ${data.gameState.id}`);
-			app.invitePlayers();
 			app.createdGame(data);
 		});
 
@@ -51,6 +50,7 @@ class App extends Component {
 	}
 
 	createGame() {
+		app.invitePlayers();
 		this.socket.emit('create-game', {
 			playerId: this.state.playerId,
 			playerName: this.state.playerName,

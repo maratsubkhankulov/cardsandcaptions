@@ -17,25 +17,6 @@ window.onload = function () {
 	});
 }
 
-/*
-function invitePlayers() {
-	console.log('send invite');
-	window.FBInstant.updateAsync({
-		action: 'CUSTOM',
-		cta: 'Play',
-		text: {
-			default: 'Player has invited you to play the Meme Game. Join them!',
-			localizations: {
-				en_US: 'Player has invited you to play the Meme Game. Join them!',
-			}
-		},
-		template: 'invite',
-		data: { },
-		strategy: 'IMMEDIATE',
-		notification: 'NO_PUSH'
-	});
-}
-*/
 function invitePlayers() {
 	let player = window.FBInstant.player.getName();
 	let payload = {
