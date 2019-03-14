@@ -18,16 +18,18 @@ window.onload = function () {
 }
 
 function invitePlayers() {
+	console.log('send invite');
+	const name = window.FBInstant.player.getName();
 	window.FBInstant.updateAsync({
 		action: 'CUSTOM',
 		cta: 'Play',
 		text: {
-			default: 'Join the meme game now',
+			default: `${name} has invited you to play the Meme Game. Join them!`,
 			localizations: {
-				en_US: 'Join the meme game now',
+				en_US: `${name} has invited you to play the Meme Game. Join them!`,
 			}
 		},
-		template: 'play_turn',
+		template: 'invite',
 		data: { myReplayData: '...' },
 		strategy: 'IMMEDIATE',
 		notification: 'NO_PUSH'
