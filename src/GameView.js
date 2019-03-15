@@ -70,6 +70,7 @@ class GameView extends Component {
 			playerId: props.playerId,
 			votes: [],
 			players: [],
+			table: [],
 			hand: [],
 			showCards: false,
 			caption: '[empty caption]',
@@ -141,19 +142,9 @@ class GameView extends Component {
 		let newBannerMessage = stateToBanner(game.getState(), iAmJudge, game);
 
 		let newHand = defaultHand();
-		if (iAmJudge) {
-			const me = game.getPlayer(this.state.playerId);
-			const votes = me.votes;
-			newHand = votes.map((vote) => {
-				const card = vote.card;
-				return {
-					id: card.id,
-					selected: false,
-					imgUrl: card.img,
-					onClick: (id) => view.selectWinningCard(vote),
-				}
-			});
-		} else {
+		let newTable = [];
+
+		if (!iAmJudge) {
 			const hand = game.getPlayer(this.state.playerId).hand;
 			if (hand.length > 0) {
 				newHand = hand.map((card) => {
@@ -188,7 +179,24 @@ class GameView extends Component {
 						}
 					}
 				}
+
 			}
+		}
+
+		// Show cards on the table
+		if (state === 'WAIT_FOR_VOTERS' || state === 'WAIT_FOR_JUDGMENT') {
+			const judge = game.getCurrentJudge();
+			const votes = judge.votes;
+
+			newTable = votes.map((vote) => {
+				const card = vote.card;
+				return {
+					id: card.id,
+					selected: false,
+					imgUrl: card.img,
+					onClick: (id) => view.selectWinningCard(vote),
+				}
+			});
 		}
 
 		let newWin = game.getLastWin();
@@ -199,6 +207,7 @@ class GameView extends Component {
 					players: newPlayers,
 					caption: newCaption,
 					bannerMessage: newBannerMessage,
+					table: newTable,
 					hand: newHand,
 					showCards: showCards,
 					lastWin: newWin,
@@ -310,6 +319,27 @@ class GameView extends Component {
 			);
 		}
 
+		let table;
+		if (this.game.getState() === 'WAIT_FOR_JUDGMENT' ||
+				this.game.getState() === 'WAIT_FOR_VOTERS') {
+				table = (
+					<HandView
+						cards={this.state.table}
+						faceUp={this.game.getState() === 'WAIT_FOR_JUDGMENT'}
+					/>
+				);
+		}
+
+		let hand;
+		if (!this.isJudgePlayer(this.game, this.state.playerId)) {
+			hand = (
+				<HandView
+					cards={this.state.hand}
+					faceUp={this.state.showCards}
+				/>
+			);
+		}
+
     return (
       <div className="Game">
 				<div className="Header">
@@ -326,10 +356,8 @@ class GameView extends Component {
 					{this.state.caption}
 				</div>
 				{winningCard}
-				<HandView
-					cards={this.state.hand}
-					faceUp={this.state.showCards}
-				/>
+				{table}
+				{hand}
       </div>
     );
   }
