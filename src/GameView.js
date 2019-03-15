@@ -6,7 +6,7 @@ import CardView from './CardView.js';
 import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
 
-function stateToBanner(gameState, iAmJudge) {
+function stateToBanner(gameState, iAmJudge, game) {
 	switch (gameState) {
 		case 'WAIT_TO_START':
 			return 'Waiting for players to join...';
@@ -25,7 +25,7 @@ function stateToBanner(gameState, iAmJudge) {
 			}
 			break;
 		case 'END_OF_TURN':
-			return 'End of turn';
+			return `${game.lastWin.player.name} won this round!`;
 			break;
 		case 'END_OF_GAME':
 			return 'End of game';
@@ -75,7 +75,7 @@ class GameView extends Component {
 			caption: '[empty caption]',
 			bannerMessage: '[empty banner]',
 			activePlayerId: null,
-			winner: null,
+			lastWin: null,
 		}
 		this.socket = props.socket;
 		this.game = new Game();
@@ -99,23 +99,6 @@ class GameView extends Component {
 			console.log(`Player ${data.playerId} joined`);
 			view.game.removePlayer(data.playerId);
 			view.onGameSynced(view.game);
-		});
-
-		this.socket.on('winner', (data) => {
-			console.log(`Player ${data.player.name} won`);
-			this.setState(
-				(state, props) => {
-					return {
-						winner: {
-							name: data.player.name,
-							card: data.card,
-					  }
-					};
-				},
-				() => {
-					console.log('Updated player list');
-					view.selectPlayer(this.state.playerId);
-				});
 		});
 
 		this.socket.on('sync', function(game) {
@@ -155,7 +138,7 @@ class GameView extends Component {
 		let newCaption = game.existsJudge() && game.getCurrentJudge().captionCard ?
 			game.getCurrentJudge().captionCard.caption : "no caption";
 
-		let newBannerMessage = stateToBanner(game.getState(), iAmJudge);
+		let newBannerMessage = stateToBanner(game.getState(), iAmJudge, game);
 
 		let newHand = defaultHand();
 		if (iAmJudge) {
@@ -208,6 +191,8 @@ class GameView extends Component {
 			}
 		}
 
+		let newWin = game.getLastWin();
+
 		this.setState(
 			(state, props) => {
 				return {
@@ -216,6 +201,7 @@ class GameView extends Component {
 					bannerMessage: newBannerMessage,
 					hand: newHand,
 					showCards: showCards,
+					lastWin: newWin,
 				};
 			},
 			() => {
@@ -301,65 +287,6 @@ class GameView extends Component {
 	}
 
   render() {
-		console.log("Render GameView");
-		/*
-		const playerItems = this.state.players.map((p) => {
-				let isActive = this.isActivePlayer(p.id);
-				let isJudge = this.isJudgePlayer(p.id);
-				let className = `${isActive ? "PlayerSelected":""} ${isJudge ? "JudgeSelected":""}`;
-				let onClick=isActive ? null : () => this.selectPlayer(p.id, p.name)
-					return (
-						<AvatarView
-							key={p.id}
-							id={p.id}
-							name={p.name}
-							points={p.points.length}
-							selected={false}
-							imgUrl='https://source.unsplash.com/random/50x50'
-						/>
-					)
-			});
-
-		let imageCardsContent = "Not an active player";
-		if (this.state.activePlayerId) {
-			let player = this.game.getPlayer(this.state.activePlayerId);
-			const hand = player.hand;
-			imageCardsContent = hand.map((card) => (
-					<div key={card.id} className="card" onClick={() => this.selectImageCard(card.id)}>
-						<img src={card.img} className="card" alt={card.id} />
-					</div>
-				)
-			);
-		}
-
-		let tableContent = "Empty table";
-		if (this.game.existsJudge()) {
-			const judge = this.game.getCurrentJudge();
-			tableContent = judge.votes.map((vote) => (
-					<div key={vote.card.id} className="card" onClick={() => this.selectWinningCard(vote)}>
-						<img src={vote.card.img} className="card" alt={vote.card.id} />
-					</div>
-				)
-			);
-		}
-
-		let winnerView;
-		if (this.state.winner) {
-			winnerView = (
-				<div>
-					<h3>
-						{this.state.winner.name} wins!
-					</h3>
-				</div>
-			)
-		}
-
-		{ this.game.existsJudge() && this.game.getCurrentJudge().captionCard ? this.game.getCurrentJudge().captionCard.caption : "no caption"}
-
-		console.log(`Judge exists: ${this.game.existsJudge()}`);
-		console.log(`Judges caption card: ${this.game.existsJudge() ? this.game.getCurrentJudge().captionCard : null}`);
-		
-*/
 		let startButton;
 		if (this.game.getState() === 'WAIT_TO_START' &&
 			this.game.players.length >= Game.minPlayers()) {
@@ -369,6 +296,20 @@ class GameView extends Component {
 				</div>
 			)
 		}
+
+		let winningCard;
+		console.log(this.game.getState());
+		if (this.state.lastWin && this.game.getState() === 'END_OF_TURN') {
+			console.log('Render winner');
+		  winningCard = (
+				<CardView
+					selected={false}
+					faceUp={true}
+					imgUrl={this.state.lastWin.card.img}
+				/>
+			);
+		}
+
     return (
       <div className="Game">
 				<div className="Header">
@@ -384,6 +325,7 @@ class GameView extends Component {
 				<div className="CaptionArea">
 					{this.state.caption}
 				</div>
+				{winningCard}
 				<HandView
 					cards={this.state.hand}
 					faceUp={this.state.showCards}

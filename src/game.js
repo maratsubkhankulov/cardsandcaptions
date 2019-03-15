@@ -175,6 +175,7 @@ export class Game {
 		this.image_stack = []; // Stack of image cards
 		this.turn_number = 0;
 		this.currentJudge = -1;
+		this.lastWin = null; // stores the most recent winning player and image card
 	}
 
 	sync(other) {
@@ -197,6 +198,13 @@ export class Game {
 
 		this.turn_number = other.turn_number;
 		this.currentJudge = other.currentJudge;
+
+		if (other.lastWin) {
+			this.lastWin = {
+				player: Player.fromObject(other.lastWin.player),
+				card: Object.assign(new ImageCard, other.lastWin.card),
+			}
+		}
 	}
 
 	getPlayer(id) {
@@ -208,6 +216,10 @@ export class Game {
 			}
 		}
 		return null;
+	}
+
+	getLastWin() {
+		return this.lastWin;
 	}
 
 	existsJudge() {
@@ -285,8 +297,6 @@ export class Game {
 
 	endTurn() {
 		this.changeState(ActionEnum.JUDGE);
-		this.playersFillHands();
-		this.turn_number += 1;
 	}
 
 	startNextTurn() {
@@ -397,8 +407,14 @@ export class Game {
 
 		let winner = vote.player;
 
+		this.lastWin = {
+			player: vote.player,
+			card: vote.card,
+		}
+
 		winner.takePoint(judge.captionCard);
-		judge.captionCard = null;
+
+		judge.clearVotes();
 
 		// Put image cards back into bottom of stack
 		for (var i = 0; i < judge.votes.length; i++) {
@@ -406,9 +422,6 @@ export class Game {
 			this.image_stack.unshift(card);
 		}
 
-		// Clear votes
-		judge.clearVotes();
-		
 		return winner;
 	}
 
@@ -444,14 +457,18 @@ export class Game {
 		this.chooseWinningCard(this.getCurrentJudge(), vote);
 
 		this.endTurn();
+		return vote;
+	}
 
+	_nextTurn() {
+		this.getCurrentJudge();
+		judge.captionCard = null;
+		
 		this.startGame();
 		this.playersFillHands();
 
 		let newJudge = this.getCurrentJudge();
 		this.collectCaptionCard(newJudge);
 		this.revealCaptionCard(newJudge);
-
-		return vote;
 	}
 }

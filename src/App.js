@@ -50,7 +50,7 @@ class App extends Component {
 	}
 
 	createGame() {
-		app.invitePlayers();
+		this.invitePlayers();
 		this.socket.emit('create-game', {
 			playerId: this.state.playerId,
 			playerName: this.state.playerName,

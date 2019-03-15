@@ -108,15 +108,9 @@ io.on('connection', function (socket) {
 			game._selectImageCard(move.playerId, move.cardId);
 		} else
 		if (move.type === 'selectWinningCard') {
-			let winningVote = game._selectWinningCard(move.playerId, move.voterId, move.cardId);
-			if (winningVote) {
-				socket.emit('winner', winningVote);
-				socket.broadcast.to(gameId).emit('winner', winningVote);
-			}
+			game._selectWinningCard(move.playerId, move.voterId, move.cardId);
 		}
-		console.log('sync caller');
 		socket.emit('sync', game);
-		console.log('sync others');
 		socket.broadcast.to(gameId).emit('sync', game);
 	});
 

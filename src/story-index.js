@@ -4,6 +4,7 @@ import './GameView.css';
 import CardView from './CardView.js';
 import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
+import AvatarView from './AvatarView.js';
 
 const uuid = require('uuid/v4');
 
@@ -55,6 +56,21 @@ function render() {
 			},
 		]
 
+	let hand = (
+			<HandView
+				cards={cards}
+				faceUp={true}
+			/>
+	);
+
+	let winner = (
+		<CardView
+			selected={false}
+			faceUp={true}
+			imgUrl={'img/4.jpg'}
+		/>
+	)
+
 	return (
 			<div>
 				<div className="Header">
@@ -64,15 +80,13 @@ function render() {
 					players={players}
 				/>
 				<div className="Banner">
-					Waiting for players to join...
+					Steve won this round!
 				</div>
 				<div className="CaptionArea">
 					When you read a very long caption and it just doesn't seem to end
 				</div>
-				<HandView
-					cards={cards}
-					faceUp={true}
-				/>
+				{winner}
+				{hand}
 			</div>
 	)
 }
