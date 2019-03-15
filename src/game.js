@@ -450,6 +450,7 @@ export class Game {
 			console.error('Vote is null');
 		}
 
+		// TODO probably shift this to client
 		if (!this.canChooseWinningCard()) {
 			console.error("Cannot choose winning card right now");
 			return;
@@ -461,7 +462,7 @@ export class Game {
 	}
 
 	_nextTurn() {
-		this.getCurrentJudge();
+		let judge = this.getCurrentJudge();
 		judge.captionCard = null;
 		
 		this.startGame();

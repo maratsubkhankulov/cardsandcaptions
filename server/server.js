@@ -109,6 +109,12 @@ io.on('connection', function (socket) {
 		} else
 		if (move.type === 'selectWinningCard') {
 			game._selectWinningCard(move.playerId, move.voterId, move.cardId);
+			setTimeout(function() {
+					game._nextTurn();
+					socket.emit('sync', game);
+					socket.broadcast.to(gameId).emit('sync', game);
+				},
+				3000);
 		}
 		socket.emit('sync', game);
 		socket.broadcast.to(gameId).emit('sync', game);
