@@ -343,7 +343,6 @@ class GameView extends Component {
     return (
       <div className="Game">
 				<div className="Header">
-					<div className="Timer">:07</div>
 					{startButton}
 				</div>
 				<PlayerPanelView
