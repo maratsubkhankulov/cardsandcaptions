@@ -4,6 +4,7 @@
   "description": "Signup, Signin, Forgot password, Terms and Conditions and Contact Us boilerplate just the UI ",
   "main": "index.js",
   "scripts": {
+		"clean": "rm -rf dist; rm -rf dist.zip",
     "start": "webpack-dev-server --mode development --open --hot",
     "start.heroku": "webpack-dev-server --mode production --open --hot",
     "storybook": "webpack-dev-server --mode development --env.storybook --open --hot",
