@@ -145,6 +145,7 @@ class GameView extends Component {
 		let newTable = [];
 
 		if (!iAmJudge) {
+			newHand = [];
 			const hand = game.getPlayer(this.state.playerId).hand;
 			if (hand.length > 0) {
 				newHand = hand.map((card) => {

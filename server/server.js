@@ -111,6 +111,7 @@ io.on('connection', function (socket) {
 		} else
 		if (move.type === 'selectWinningCard') {
 			const winningVote = game._selectWinningCard(move.playerId, move.voterId, move.cardId);
+			if (!winningVote) return;
 			setTimeout(function() {
 					if (winningVote.player.points.length >= Game.maxScore()) {
 						console.log('Max turns reached. End of game.');

@@ -23,6 +23,9 @@ export function initGame(game) {
 }
 
 export function fillCardStacks(game) {
+	game.caption_stack = [];
+	game.image_stack = [];
+
 	game.addCaptionCard(new CaptionCard(1, "I didn't choose the thug life, the thug life chose me."));
 	game.addCaptionCard(new CaptionCard(2, "Why isn't anybody giving me attention?"));
 	game.addCaptionCard(new CaptionCard(3, "When your bus is late."));
