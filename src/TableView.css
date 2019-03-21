@@ -1,8 +1,9 @@
-.Hand {
+.Table {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 10px;
+	background-color: black;
+	border: 10px solid black;
   color: #444;
 	margin: 5px;
 }
-

@@ -5,6 +5,7 @@ import { initGame, fillCardStacks, fillPlayers } from './game_utils';
 import CardView from './CardView.js';
 import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
+import TableView from './TableView.js';
 
 function stateToBanner(gameState, iAmJudge, game) {
 	switch (gameState) {
@@ -321,10 +322,11 @@ class GameView extends Component {
 		}
 
 		let table;
-		if (this.game.getState() === 'WAIT_FOR_JUDGMENT' ||
-				this.game.getState() === 'WAIT_FOR_VOTERS') {
+		if ((this.game.getState() === 'WAIT_FOR_JUDGMENT' ||
+				this.game.getState() === 'WAIT_FOR_VOTERS') &&
+				this.state.table.length > 0) {
 				table = (
-					<HandView
+					<TableView
 						cards={this.state.table}
 						faceUp={this.game.getState() === 'WAIT_FOR_JUDGMENT'}
 					/>
