@@ -162,7 +162,6 @@ transitions[StateEnum.END_OF_TURN][ActionEnum.START] = StateEnum.WAIT_FOR_JUDGE;
 transitions[StateEnum.END_OF_GAME][ActionEnum.START] = StateEnum.WAIT_FOR_VOTERS;
 
 export class Game {
-	static maxTurns() { return (Game.maxPlayers() - 1) * Game.maxScore() + 1; }
 	static maxScore() { return 5; }
 	static maxPlayers() { return 5; }
 	static minPlayers() { return 3; }

@@ -110,9 +110,14 @@ io.on('connection', function (socket) {
 			game._selectImageCard(move.playerId, move.cardId);
 		} else
 		if (move.type === 'selectWinningCard') {
-			game._selectWinningCard(move.playerId, move.voterId, move.cardId);
+			const winningVote = game._selectWinningCard(move.playerId, move.voterId, move.cardId);
 			setTimeout(function() {
-					game._nextTurn();
+					if (winningVote.player.points.length >= Game.maxScore()) {
+						console.log('Max turns reached. End of game.');
+						initGame(game);
+					} else {
+						game._nextTurn();
+					}
 					socket.emit('sync', game);
 					socket.broadcast.to(gameId).emit('sync', game);
 				},

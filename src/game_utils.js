@@ -6,6 +6,13 @@ export function initGame(game) {
 	shuffleArray(game.caption_stack);
 	shuffleArray(game.image_stack);
 
+	for (let i = 0; i < game.players.length; i++) {
+		game.players[i].hand = [];
+		game.players[i].captionCard = null;
+		game.players[i].points = [];
+		game.players[i].votes = [];
+	}
+
 	game.playersFillHands();
 
 	game.startGame();
