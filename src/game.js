@@ -474,3 +474,4 @@ export class Game {
 		this.revealCaptionCard(newJudge);
 	}
 }
+
