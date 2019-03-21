@@ -340,6 +340,8 @@ class GameView extends Component {
 			);
 		}
 
+		console.log(`Image stack: ${this.game.image_stack.length}`);
+
     return (
       <div className="Game">
 				<div className="Header">

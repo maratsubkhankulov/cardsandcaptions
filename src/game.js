@@ -413,14 +413,15 @@ export class Game {
 		}
 
 		winner.takePoint(judge.captionCard);
-
-		judge.clearVotes();
+		const votes = judge.votes;
 
 		// Put image cards back into bottom of stack
-		for (var i = 0; i < judge.votes.length; i++) {
-			let card = judge.votes[i];
+		for (var i = 0; i < votes.length; i++) {
+			let card = votes[i].card;
 			this.image_stack.unshift(card);
 		}
+
+		judge.clearVotes();
 
 		return winner;
 	}
