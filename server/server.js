@@ -4,7 +4,9 @@ const http = require('http');
 const uuid = require('uuid/v4');
 const app = express();
 const server = http.Server(app);
-const io = socketio(server); // Attach socket.io to our server
+const io = socketio(server, {
+	pingTimeout: 6000
+}); // Attach socket.io to our server
 import {Game, Player} from '../src/game';
 import {initGame, fillCardStacks} from '../src/game_utils';
 
