@@ -34,9 +34,7 @@ class AvatarView extends Component {
 					{this.state.points}
 				</div>
 				<img className="Icon" src={this.state.imgUrl}></img>
-				<div className="Name">
 					{this.state.name}
-				</div>
 			</div>
 		)
 	}

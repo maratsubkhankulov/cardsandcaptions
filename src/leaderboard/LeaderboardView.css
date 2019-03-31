@@ -1,81 +1,9 @@
-.Header {
-	background-color: #ffffff;
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
-
-.Timer {
-	background-color: #000000;
-	border-radius: 50%;
-	color: #ffffff;
-	font-size: 15;
-	width: 30px;
-	height: 30px;
-	text-align: center;
-	vertical-align: middle;
-	line-height: 30px;
-}
-
-.Banner {
-  background-color: #42cef4;
-	color: #ffffff;
-	font-size: 15pt;
+.Title {
+  background-color: #ffffff;
+	color: grey;
+	font-size: 30pt;
 	min-height: 7%;
 	text-align: center;
 	vertical-align: middle;
 	line-height: 50px;
 }
-
-.CaptionArea {
-	background-color: #ffffff;
-	color: #777777;
-	height: 100px;
-	font-size: 20;
-	min-height: 80px;
-	text-align: center;
-	vertical-align: middle;
-	padding: 10px;
-}
-
-.Table {
-	background-color: #aaaaff;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10px;
-  color: #444;
-	min-height: 100px;
-	margin: 5px;
-}
-
-.Hand {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10px;
-	background-color: #ffffff;
-  color: #444;
-	margin: 5px;
-}
-
-.PlayerSelected {
-	text-decoration: underline;
-}
-
-.JudgeSelected {
-	text-decoration: overline;
-}
-
-div.card {
-	//border: 2px solid black;
-  //border-radius: 5px;
-  width: 100%;
-	height: 100%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  text-align: center;
-}
-
-img.card{
-	width: inherit;
-	height: inherit;
-  //border-radius: 5px;
-}
-
