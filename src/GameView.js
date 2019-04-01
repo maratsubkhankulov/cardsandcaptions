@@ -6,6 +6,7 @@ import CardView from './CardView.js';
 import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
 import TableView from './TableView.js';
+import LeaderboardView from './leaderboard/LeaderboardView.js';
 
 function stateToBanner(gameState, iAmJudge, game) {
 	switch (gameState) {
@@ -345,25 +346,33 @@ class GameView extends Component {
 
 		console.log(`Image stack: ${this.game.image_stack.length}`);
 
-    return (
-      <div className="Game">
-				<div className="Header">
-					{startButton}
-				</div>
-				<PlayerPanelView
-					players={this.state.players}
+		if (this.state.players) {
+			return (
+				<LeaderboardView
+					players={this.state.players}	
 				/>
-				<div className="Banner">
-					{this.state.bannerMessage}
+			);
+		} else {
+			return (
+				<div className="Game">
+					<div className="Header">
+						{startButton}
+					</div>
+					<PlayerPanelView
+						players={this.state.players}
+					/>
+					<div className="Banner">
+						{this.state.bannerMessage}
+					</div>
+					<div className="CaptionArea">
+						{this.state.caption}
+					</div>
+					{winningCard}
+					{table}
+					{hand}
 				</div>
-				<div className="CaptionArea">
-					{this.state.caption}
-				</div>
-				{winningCard}
-				{table}
-				{hand}
-      </div>
-    );
+			);
+		}
   }
 }
 

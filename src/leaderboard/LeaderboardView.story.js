@@ -24,6 +24,27 @@ class LeaderboardViewStory extends Component {
 					points: 12,
 					selected: false,
 					imgUrl: 'https://source.unsplash.com/random/75x75',
+				},
+				{
+					id: '3',
+					name: 'Alice',
+					points: 5,
+					selected: false,
+					imgUrl: 'https://source.unsplash.com/random/75x75',
+				},
+				{
+					id: '4',
+					name: 'Jeff',
+					points: 3,
+					selected: false,
+					imgUrl: 'https://source.unsplash.com/random/75x75',
+				},
+				{
+					id: '4',
+					name: 'Ashley',
+					points: 3,
+					selected: false,
+					imgUrl: 'https://source.unsplash.com/random/75x75',
 				}
 			]
 
