@@ -346,10 +346,10 @@ class GameView extends Component {
 
 		console.log(`Image stack: ${this.game.image_stack.length}`);
 
-		if (this.state.players) {
+		if (this.state.leaderboard) {
 			return (
 				<LeaderboardView
-					players={this.state.players}	
+					players={this.state.leaderboard}	
 				/>
 			);
 		} else {
