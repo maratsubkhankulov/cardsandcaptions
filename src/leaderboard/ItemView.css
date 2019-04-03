@@ -1,4 +1,4 @@
-.Container {
+.ItemContainer {
 	border-radius: 50px;
 	height: 60px;
 	width: 95%;
@@ -7,7 +7,7 @@
 	margin-top: 5px;
 }
 
-.SelectedContainer {
+.ItemSelectedContainer {
 	border-radius: 50px;
 	height: 60px;
 	width: 95%;
@@ -17,7 +17,7 @@
 	border: 5px solid #55bb55;
 }
 
-.Name {
+.ItemName {
 	color: grey;
 	position: relative;
 	height: 60px;
@@ -27,7 +27,7 @@
 	font-size: 24pt;
 }
 
-.Icon {
+.ItemIcon {
 	position: absolute;
 	border-radius: 50%;
 	height: 50px;
@@ -39,7 +39,7 @@
 	z-index: 1000;
 }
 
-.Score {
+.ItemScore {
 	position: absolute;
 	font-size: 24pt;
 	width: 50px;
