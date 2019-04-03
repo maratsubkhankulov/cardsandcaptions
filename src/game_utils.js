@@ -43,7 +43,7 @@ export function fillCardStacks(game) {
 	game.addCaptionCard(new CaptionCard(15, "When you spill your drink on your computer."));
 	game.addCaptionCard(new CaptionCard(16, "When someone steps on your fresh kicks."));
 	game.addCaptionCard(new CaptionCard(17, "When you get an unwanted nude."));
-	game.addCaptionCard(new CaptionCard(18, "When you eat sour candy."));
+	game.addCaptionCard(new CaptionCard(18, "When you can't find anything to watch on Netflix."));
 	game.addCaptionCard(new CaptionCard(19, "When your Uber/Lyft driver talks too much."));
 	game.addCaptionCard(new CaptionCard(20, "When your mom makes your favourite food."));
 	game.addCaptionCard(new CaptionCard(21, "When you swipe your card and it's declined."));
