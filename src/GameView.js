@@ -79,6 +79,7 @@ class GameView extends Component {
 			bannerMessage: '[empty banner]',
 			activePlayerId: null,
 			lastWin: null,
+			leaderboard: null,
 		}
 		this.socket = props.socket;
 		this.game = new Game();
@@ -203,6 +204,18 @@ class GameView extends Component {
 		}
 
 		let newWin = game.getLastWin();
+		let leaderboard = null;
+		if (state == 'END_OF_TURN') {
+			leaderboard = players.map((p) => {
+				return {
+					id: p.id,
+					name: p.name,
+					points: p.points.length,
+					selected: false,
+					imgUrl: p.imgUrl,
+				}
+			});
+		}
 
 		this.setState(
 			(state, props) => {
@@ -214,6 +227,7 @@ class GameView extends Component {
 					hand: newHand,
 					showCards: showCards,
 					lastWin: newWin,
+					leaderboard: leaderboard,
 				};
 			},
 			() => {

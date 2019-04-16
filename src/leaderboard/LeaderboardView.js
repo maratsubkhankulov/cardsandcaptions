@@ -30,7 +30,7 @@ class LeaderboardView extends Component {
 			});
 		return (
 			<div className="Leaderboard">
-				<div className="Title">
+				<div className="LeaderboardTitle">
 					Winner!
 				</div>
 				{playerItems}
