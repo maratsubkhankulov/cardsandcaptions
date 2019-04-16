@@ -23,17 +23,17 @@ class ItemView extends Component {
 	}
 
 	render() {
-	  let className = "Container";
+	  let className = "ItemContainer";
 		if (this.state.selected) {
-			className = "SelectedContainer";
+			className = "ItemSelectedContainer";
 		}
 		return (
 			<div className={className}>
-				<img className="Icon" src={this.state.imgUrl}></img>
-				<div className="Name">
+				<img className="ItemIcon" src={this.state.imgUrl}></img>
+				<div className="ItemName">
 					{this.state.name}
 				</div>
-				<div className="Score">
+				<div className="ItemScore">
 					{this.state.points}
 				</div>
 			</div>

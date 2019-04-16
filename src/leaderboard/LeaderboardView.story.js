@@ -40,7 +40,7 @@ class LeaderboardViewStory extends Component {
 					imgUrl: 'https://source.unsplash.com/random/75x75',
 				},
 				{
-					id: '4',
+					id: '5',
 					name: 'Ashley',
 					points: 3,
 					selected: false,
