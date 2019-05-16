@@ -111,16 +111,28 @@ io.on('connection', function (socket) {
 		} else
 		if (move.type === 'selectWinningCard') {
 			const winningVote = game._selectWinningCard(move.playerId, move.voterId, move.cardId);
+
+			// Handle end of turn and end of game events
 			if (!winningVote) return;
 			setTimeout(function() {
+					// If max score has been reached
 					if (winningVote.player.points.length >= Game.maxScore()) {
 						console.log('Max turns reached. End of game.');
-						initGame(game);
+						game.endGame();
+						socket.emit('sync', game);
+						socket.broadcast.to(gameId).emit('sync', game);
+						setTimeout(function() {
+							game.reinit();
+							initGame(game);
+							socket.emit('sync', game);
+							socket.broadcast.to(gameId).emit('sync', game);
+						},
+						3000);
 					} else {
 						game._nextTurn();
+						socket.emit('sync', game);
+						socket.broadcast.to(gameId).emit('sync', game);
 					}
-					socket.emit('sync', game);
-					socket.broadcast.to(gameId).emit('sync', game);
 				},
 				3000);
 		}

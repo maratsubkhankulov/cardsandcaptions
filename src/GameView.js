@@ -205,7 +205,7 @@ class GameView extends Component {
 
 		let newWin = game.getLastWin();
 		let leaderboard = null;
-		if (state == 'END_OF_TURN') {
+		if (state == 'END_OF_GAME') {
 			leaderboard = players.map((p) => {
 				return {
 					id: p.id,
@@ -215,6 +215,8 @@ class GameView extends Component {
 					imgUrl: p.imgUrl,
 				}
 			});
+		} else {
+			leaderboard = null;
 		}
 
 		this.setState(

@@ -144,6 +144,7 @@ const ActionEnum = {
 	COLLECT_VOTES: 2,
 	JUDGE: 3,
 	END_GAME: 4,
+	REINIT: 5,
 }
 
 function ActionToString(value) {
@@ -159,10 +160,10 @@ transitions[StateEnum.WAIT_FOR_VOTERS][ActionEnum.COLLECT_VOTES] = StateEnum.WAI
 transitions[StateEnum.WAIT_FOR_JUDGMENT][ActionEnum.JUDGE] = StateEnum.END_OF_TURN;
 transitions[StateEnum.END_OF_TURN][ActionEnum.END_GAME] = StateEnum.END_OF_GAME;
 transitions[StateEnum.END_OF_TURN][ActionEnum.START] = StateEnum.WAIT_FOR_JUDGE;
-transitions[StateEnum.END_OF_GAME][ActionEnum.START] = StateEnum.WAIT_FOR_VOTERS;
+transitions[StateEnum.END_OF_GAME][ActionEnum.REINIT] = StateEnum.WAIT_TO_START;
 
 export class Game {
-	static maxScore() { return 2; }
+	static maxScore() { return 5; }
 	static maxPlayers() { return 5; }
 	static minPlayers() { return 3; }
 
@@ -296,6 +297,14 @@ export class Game {
 
 	endTurn() {
 		this.changeState(ActionEnum.JUDGE);
+	}
+
+	endGame() {
+		this.changeState(ActionEnum.END_GAME);
+	}
+
+	reinit() {
+		this.changeState(ActionEnum.REINIT);
 	}
 
 	startNextTurn() {
