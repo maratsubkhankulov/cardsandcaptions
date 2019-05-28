@@ -148,8 +148,14 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('disconnect', function() {
+		// Clean up connections
 		console.log(`Client ${clientId} disconnected`);
 		delete connections[clientId];
+		// Start timeout
+
+		// Player left
+		// TODO trigger on timeout or intentional leaving
+		/*
 		let gameId = clientGameMap[clientId];
 		let playerId = clientPlayerMap[clientId];
 		console.log(`${gameId} ${playerId}`);
@@ -163,5 +169,6 @@ io.on('connection', function (socket) {
 				delete clientGameMap[clientId];
 			}
 		}
+		*/
 	});
 });
