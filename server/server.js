@@ -15,9 +15,16 @@ var port = process.env.PORT || 4000;
 app.use(express.static('public')); // Serve our static assets from /public
 server.listen(port, () => console.log(`server started ${port}`));
 
+// connections - maps clientId -> Socket
 const connections = {};
+
+// games - maps gameId -> Game
 const games = {};
+
+// clientGameMap - maps clientId -> gameId
 const clientGameMap = {};
+
+// clientPlayerMap - maps clientId -> playerId
 const clientPlayerMap = {};
 
 // Handle a socket connection request from web client
