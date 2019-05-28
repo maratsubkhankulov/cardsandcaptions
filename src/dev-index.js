@@ -9,7 +9,9 @@ function invitePlayers() {
 }
 
 window.onload = function () {
-	let id = uuid();
+	// Assume that in development mode playerId is stored in URL query
+	const urlParams = new URLSearchParams(window.location.search);
+	const id = urlParams.get('playerId');
 	let name = `User_${id.substring(0,1)}`;
 	ReactDOM.render(
 		<App
