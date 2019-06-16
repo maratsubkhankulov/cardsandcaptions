@@ -117,8 +117,6 @@ class GameView extends Component {
 			view.game.sync(game);
 			view.onGameSynced(view.game);
 		});
-
-		fillCardStacks(this.game);
 	}
 
 	onGameSynced(game) {
@@ -169,21 +167,19 @@ class GameView extends Component {
 				for (var i = 0; i < votes.length; i++) {
 					vote = votes[i];
 					if (vote.player.id === view.state.playerId) {
-						break;
-					}
-				}
-
-				if (vote) {
-					newHand = view.state.hand.slice();
-					// Find and select card
-					for (var i = 0; i < newHand.length; i++) {
-						if (newHand[i].id === vote.card.id) {
-							newHand[i].selected = true;
-							break;
+						if (vote) {
+							console.log(`Vote ${vote.card}`);
+							newHand.push(
+								{
+									id: vote.card.id,
+									selected: true,
+									imgUrl: vote.card.img,
+									onClick: (id) => view.selectImageCard(id),
+								}
+							);
 						}
 					}
 				}
-
 			}
 		}
 
@@ -359,8 +355,6 @@ class GameView extends Component {
 				/>
 			);
 		}
-
-		console.log(`Image stack: ${this.game.image_stack.length}`);
 
 		if (this.state.leaderboard) {
 			return (
