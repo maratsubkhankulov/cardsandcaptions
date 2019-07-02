@@ -9,6 +9,7 @@ class App extends Component {
 
 		this.state = {
 			gameState: null,
+			connected: false,
 			playerId: props.playerId,
 			playerName: props.playerName,
 			playerImgUrl: props.playerImgUrl,
@@ -20,6 +21,41 @@ class App extends Component {
 		let host = props.server;
 		this.invitePlayers = props.invitePlayers;
 		this.socket = socketIOClient(host, function() { console.log(`Connected to ${host}`)});
+
+		this.socket.on('connect', () => {
+			app.setState(
+				(state, props) => {
+					return {
+						connected: true
+					}
+				},
+				() => {
+					console.log('Update state: Connected');
+				}
+			);
+		});
+
+		this.socket.on('disconnect', (reason) => {
+			console.log('socket disconnected, reason:' + reason);
+			app.setState(
+				(state, props) => {
+					return {
+						connected: false,
+						gameState: null,
+						activateGameStates: {}
+					}
+				},
+				() => {
+					console.log('Update state: Disconnected');
+				}
+			);
+			if (reason === 'io server disconnect') {
+				// the disconnection was initiated by the server, you need to reconnect manually
+				socket.connect();
+			}
+			// else the socket will automatically try to reconnect
+		});
+
 		//TODO refactor into socket client interface
 		this.socket.on('game-created', function(data) {
 			console.log(`server: game-created with id ${data.gameState.id}`);
@@ -97,7 +133,14 @@ class App extends Component {
 	}
 
   render() {
+		if (this.state.connected === false) {
+			return (
+				<div>Waiting for connection...</div>
+			)
+		}
+
 		let gameView;
+
 		if (this.state.gameState) {
 			gameView = (
 					<GameView
@@ -107,7 +150,6 @@ class App extends Component {
 					/>
 			)
 		}
-
 
 		let gamesListView;
 		if (!gameView) {
