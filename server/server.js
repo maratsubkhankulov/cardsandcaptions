@@ -15,6 +15,8 @@ var port = process.env.PORT || 4000;
 app.use(express.static('public')); // Serve our static assets from /public
 server.listen(port, () => console.log(`server started ${port}`));
 
+const AUTOVOTE_TIMEOUT = 3000;
+
 // connections - maps clientId -> Socket
 const connections = {};
 
@@ -26,6 +28,30 @@ const clientGameMap = {};
 
 // clientPlayerMap - maps clientId -> playerId
 const clientPlayerMap = {};
+
+// autovoteTimerMap - maps gameId -> timeout id
+const autovoteTimeoutMap = {};
+
+// Starts timer for autovotes to happen
+// Any player that hasn't voted will receive a random vote
+function startAutovoteTimer(game, socket) {
+	console.log(`Autovote timer started for {timeout} ms`);
+
+	// Clear previous timeout
+	if (autovoteTimeoutMap[game.id]) {
+		clearTimeout(autovoteTimeoutMap[game.id]);
+	}
+
+	// Set new timeout
+	autovoteTimeoutMap[game.id] = setTimeout(function() {
+		console.log('Casting autovote');
+		game.autovote();
+		socket.emit('sync', game);
+		socket.broadcast.to(game.id).emit('sync', game);
+	},
+	AUTOVOTE_TIMEOUT
+	);
+}
 
 // Handle a socket connection request from web client
 io.on('connection', function (socket) {
@@ -100,6 +126,7 @@ io.on('connection', function (socket) {
 			initGame(games[gameId]);
 			socket.emit('init-game', games[gameId]);
 			socket.broadcast.to(gameId).emit('init-game', games[gameId]);
+			startAutovoteTimer(games[gameId], socket);
 		} else {
 			console.log("There are not enough players to start game");
 		}
@@ -133,10 +160,13 @@ io.on('connection', function (socket) {
 							initGame(game);
 							socket.emit('sync', game);
 							socket.broadcast.to(gameId).emit('sync', game);
+							startAutovoteTimer(game, socket);
 						},
 						3000);
 					} else {
 						game._nextTurn();
+
+						startAutovoteTimer(game, socket);
 						socket.emit('sync', game);
 						socket.broadcast.to(gameId).emit('sync', game);
 					}

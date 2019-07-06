@@ -434,6 +434,30 @@ export class Game {
 		return winner;
 	}
 
+	// Casts automatic vote for players that haven't voted
+	// Has no effect if everyone has voted
+	autovote() {
+		if (this.state === StateEnum.WAIT_FOR_VOTERS) {
+			const judge = this.getCurrentJudge();
+			let voters = judge.votes.map(function(vote) {
+				return vote.player.id;
+			});
+
+			for (var i = 0; i < this.players.length; i++) {
+				let player = this.players[i];
+				if (player.id !== judge.id && !voters.includes(player.id))  {
+					// Cast autovote
+					const firstCard = player.hand[0]
+					this._selectImageCard(player.id, firstCard.id);
+				}
+			}
+		} if (this.state === StateEnum.WAIT_FOR_VOTERS) {
+			const judge = this.getCurrentJudge();
+			const firstVote = judge.votes[0];
+			this._selectWinningCard(judge.id, firstVote.player.id, firstVote.card.id);
+		}
+	}
+
 	// Convenience methods
 	_selectImageCard(playerId, cardId) {
 		let player = this.getPlayer(playerId);
