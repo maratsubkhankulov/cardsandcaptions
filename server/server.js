@@ -15,25 +15,33 @@ var port = process.env.PORT || 4000;
 app.use(express.static('public')); // Serve our static assets from /public
 server.listen(port, () => console.log(`server started ${port}`));
 
+// Game server configuration
 const AUTOVOTE_TIMEOUT = 3000;
 
-// connections - maps clientId -> Socket
-const connections = {};
+/**
+ * Game server state
+ * Tracks games and connected clients. Some games are active, but
+ * some players are are pre-game.
+ *
+ * - client - has a clientId and an associated socket connection
+ * - game - is an instance of a meme game. An abstract game entity that players are
+       a part of.
+ * - player - is a game participant. A player drives makes moves in the game
+       using a client.
+ *
+ * Autovoting will take place at certain parts of the game, during an extended period
+ * of player inaction.
+ */
+const connections = {}; // clientId -> Socket
+const games = {}; // gameId -> Game
+const clientGameMap = {}; // clientId -> gameId
+const clientPlayerMap = {}; // clientId -> playerId
+const autovoteTimeoutMap = {}; // gameId -> timeout id
 
-// games - maps gameId -> Game
-const games = {};
-
-// clientGameMap - maps clientId -> gameId
-const clientGameMap = {};
-
-// clientPlayerMap - maps clientId -> playerId
-const clientPlayerMap = {};
-
-// autovoteTimerMap - maps gameId -> timeout id
-const autovoteTimeoutMap = {};
-
-// Starts timer for autovotes to happen
-// Any player that hasn't voted will receive a random vote
+/**
+ * Starts timer for autovotes to happen
+ * Any player that hasn't voted will receive a random vote
+ */
 function startAutovoteTimer(game, socket) {
 	console.log(`Autovote timer started for {timeout} ms`);
 
@@ -51,6 +59,150 @@ function startAutovoteTimer(game, socket) {
 	},
 	AUTOVOTE_TIMEOUT
 	);
+}
+
+/**
+ * onCreateGame is triggered when a game if first created.
+ * A game is created by one and only one player, who is the first participants.
+ * The server will then notify the other clients so that players waiting in the
+ * context can connect.
+ */
+function onCreateGame(socket, clientId, data) {
+	// Create game
+	let gameId = data.contextId;
+	socket.join(gameId);
+
+	games[gameId] = new Game(gameId);
+
+	// Update mappings
+	let playerId = data.playerId;
+	// TODO dedupe with join-game
+	let player = new Player(data.playerId, data.playerName, data.playerImgUrl);
+	games[gameId].addPlayer(player);
+
+	clientGameMap[clientId] = gameId;
+	clientPlayerMap[clientId] = playerId;
+
+	console.log(`Player ${playerId} created game ${gameId}`);
+
+	// Notify
+	socket.emit('game-created', { gameState: games[gameId] });
+	socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
+  // TODO wil is broadcasting all games to all clients, which doesn't scale.
+	socket.broadcast.emit('active-games', {games: games});
+}
+
+/**
+ * onJoinGame is triggered when a player joins an existing game
+ */
+function onJoinGame(socket, clientId, data) {
+	let gameId = data.gameId;
+	let playerId = data.playerId;
+
+	let player = games[gameId].getPlayer(playerId);
+	if (!player) {
+		player = new Player(data.playerId, data.playerName, data.playerImgUrl);
+		games[gameId].addPlayer(player);
+		console.log(`Player ${playerId} joined ${gameId}`)
+	} else {
+		console.log(`Player ${playerId} rejoined ${gameId}`)
+	}
+	clientPlayerMap[clientId] = playerId;
+	clientGameMap[clientId] = gameId;
+
+	socket.join(gameId);
+	socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
+	socket.broadcast.to(gameId).emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
+}
+
+/**
+ * onStartGame is triggered when one player chooses to start a staged game. This player
+ * must have already joined the game.
+ */
+function onStartGame(socket, clientId, data) {
+	const gameId = clientGameMap[clientId];
+	// Check to start
+	const minPlayers = Game.minPlayers();
+	if (games[gameId].players.length >= minPlayers) {
+		console.log(`Reached minimum number of players ${games[gameId].players.length}`);
+
+		initGame(games[gameId]);
+		socket.emit('init-game', games[gameId]);
+		socket.broadcast.to(gameId).emit('init-game', games[gameId]);
+		startAutovoteTimer(games[gameId], socket);
+	} else {
+		console.log("There are not enough players to start game");
+	}
+}
+
+/**
+ * onSelectImageCard is called when a player selects an image card amongst
+ * several options.
+ */
+function onSelectImageCard(socket, clientId, move) {
+	const gameId = clientGameMap[clientId];
+	const game = games[gameId];
+
+	game._selectImageCard(move.playerId, move.cardId);
+}
+
+/**
+ * onSelectWinningCard is called when a judge player selects the winning card.
+ * The game then either starts the next round or finishes and displays high score.
+ */
+function onSelectWinningCard(socket, clientId, move) {
+	const gameId = clientGameMap[clientId];
+	const game = games[gameId];
+	const winningVote = game._selectWinningCard(move.playerId, move.voterId, move.cardId);
+
+	// Handle end of turn and end of game events
+	if (!winningVote) return;
+	setTimeout(function() {
+			// If max score has been reached
+			if (winningVote.player.points.length >= Game.maxScore()) {
+				console.log('Max turns reached. End of game.');
+				game.endGame();
+				socket.emit('sync', game);
+				socket.broadcast.to(gameId).emit('sync', game);
+				setTimeout(function() {
+					game.reinit();
+					initGame(game);
+					socket.emit('sync', game);
+					socket.broadcast.to(gameId).emit('sync', game);
+					startAutovoteTimer(game, socket);
+				},
+				3000);
+			} else {
+				game._nextTurn();
+
+				startAutovoteTimer(game, socket);
+				socket.emit('sync', game);
+				socket.broadcast.to(gameId).emit('sync', game);
+			}
+		},
+		3000);
+}
+
+function onDisconnect(socket, clientId) {
+	// Clean up connections
+	console.log(`Client ${clientId} disconnected`);
+	delete connections[clientId];
+}
+
+function onPlayerExit(socket, client) {
+	let gameId = clientGameMap[clientId];
+	let playerId = clientPlayerMap[clientId];
+	console.log(`${gameId} ${playerId}`);
+	if (gameId && playerId) {
+		console.log(`Left game ${playerId}`);
+		socket.broadcast.to(gameId).emit('left-game', { gameId: gameId, playerId: playerId });
+		games[gameId].removePlayer(playerId);
+		delete clientPlayerMap[clientId];
+		if (games[gameId].players.length === 0) {
+			delete games[gameId];
+			delete clientGameMap[clientId];
+		}
+	}
 }
 
 // Handle a socket connection request from web client
@@ -71,134 +223,39 @@ io.on('connection', function (socket) {
 
 	// Game session events
 	socket.on('create-game', function(data) {
-
-		// Create game
-		let gameId = data.contextId;
-		socket.join(gameId);
-
-		games[gameId] = new Game(gameId);
-
-		// Update mappings
-		let playerId = data.playerId;
-	  // TODO dedupe with join-game
-		let player = new Player(data.playerId, data.playerName, data.playerImgUrl);
-		games[gameId].addPlayer(player);
-
-		clientGameMap[clientId] = gameId;
-		clientPlayerMap[clientId] = playerId;
-
-		console.log(`Player ${playerId} created game ${gameId}`);
-
-		// Notify
-		socket.emit('game-created', { gameState: games[gameId] });
-		socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
-		socket.broadcast.emit('active-games', {games: games});
+		onCreateGame(socket, clientId, data);
 	});
 
 	socket.on('join-game', function(data) {
-		let gameId = data.gameId;
-		let playerId = data.playerId;
-
-		let player = games[gameId].getPlayer(playerId);
-		if (!player) {
-			player = new Player(data.playerId, data.playerName, data.playerImgUrl);
-			games[gameId].addPlayer(player);
-			console.log(`Player ${playerId} joined ${gameId}`)
-		} else {
-			console.log(`Player ${playerId} rejoined ${gameId}`)
-		}
-		clientPlayerMap[clientId] = playerId;
-		clientGameMap[clientId] = gameId;
-
-		socket.join(gameId);
-		socket.emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
-		socket.broadcast.to(gameId).emit('joined-game', { gameId: gameId, playerId: playerId, gameState: games[gameId]});
-
+		onJoinGame(socket, clientId, data);
 	});
 
 	socket.on('start-game', function(data) {
-		const gameId = clientGameMap[clientId];
-		// Check to start
-		const minPlayers = Game.minPlayers();
-		if (games[gameId].players.length >= minPlayers) {
-			console.log(`Reached minimum number of players ${games[gameId].players.length}`);
-
-			initGame(games[gameId]);
-			socket.emit('init-game', games[gameId]);
-			socket.broadcast.to(gameId).emit('init-game', games[gameId]);
-			startAutovoteTimer(games[gameId], socket);
-		} else {
-			console.log("There are not enough players to start game");
-		}
+		onStartGame(socket, clientId, data);
 	});
 
 	socket.on('get-active-games', () => {
 		socket.emit('active-games', {games: games});
 	});
 
-	// In-game events
+	// Handle player actions
 	socket.on('actuate', function(move) {
 		const gameId = clientGameMap[clientId];
 		const game = games[gameId];
-		if (move.type === 'selectImageCard') {
-			game._selectImageCard(move.playerId, move.cardId);
-		} else
-		if (move.type === 'selectWinningCard') {
-			const winningVote = game._selectWinningCard(move.playerId, move.voterId, move.cardId);
 
-			// Handle end of turn and end of game events
-			if (!winningVote) return;
-			setTimeout(function() {
-					// If max score has been reached
-					if (winningVote.player.points.length >= Game.maxScore()) {
-						console.log('Max turns reached. End of game.');
-						game.endGame();
-						socket.emit('sync', game);
-						socket.broadcast.to(gameId).emit('sync', game);
-						setTimeout(function() {
-							game.reinit();
-							initGame(game);
-							socket.emit('sync', game);
-							socket.broadcast.to(gameId).emit('sync', game);
-							startAutovoteTimer(game, socket);
-						},
-						3000);
-					} else {
-						game._nextTurn();
-
-						startAutovoteTimer(game, socket);
-						socket.emit('sync', game);
-						socket.broadcast.to(gameId).emit('sync', game);
-					}
-				},
-				3000);
+		switch (move.type) {
+			case 'selectImageCard':
+				onSelectImageCard(socket, clientId, move);
+				break;
+			case 'selectWinningCard':
+				onSelectWinningCard(socket, clientId, move);
+				break;
 		}
 		socket.emit('sync', game);
 		socket.broadcast.to(gameId).emit('sync', game);
 	});
 
 	socket.on('disconnect', function() {
-		// Clean up connections
-		console.log(`Client ${clientId} disconnected`);
-		delete connections[clientId];
-		// Start timeout
-
-		// Player left
-		// TODO trigger on timeout or intentional leaving
-		/*
-		let gameId = clientGameMap[clientId];
-		let playerId = clientPlayerMap[clientId];
-		console.log(`${gameId} ${playerId}`);
-		if (gameId && playerId) {
-			console.log(`Left game ${playerId}`);
-			socket.broadcast.to(gameId).emit('left-game', { gameId: gameId, playerId: playerId });
-			games[gameId].removePlayer(playerId);
-			delete clientPlayerMap[clientId];
-			if (games[gameId].players.length === 0) {
-				delete games[gameId];
-				delete clientGameMap[clientId];
-			}
-		}
-		*/
+		onDisconnect(socket, clientId);
 	});
 });
