@@ -111,6 +111,10 @@ class GameView extends Component {
 			view.onGameSynced(view.game);
 		});
 
+		this.socket.on('tick', function(time) {
+			console.log(`Tick ` + time);
+		});
+
 		this.socket.on('init-game', function(game) {
 			console.log('init-game');
 		  console.log(`Game state: ${JSON.stringify(game)}`);

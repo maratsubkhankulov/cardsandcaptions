@@ -47,17 +47,27 @@ function startAutovoteTimer(game, socket) {
 
 	// Clear previous timeout
 	if (autovoteTimeoutMap[game.id]) {
-		clearTimeout(autovoteTimeoutMap[game.id]);
+		clearInterval(autovoteTimeoutMap[game.id]);
 	}
 
-	// Set new timeout
-	autovoteTimeoutMap[game.id] = setTimeout(function() {
-		console.log('Casting autovote');
-		game.autovote();
-		socket.emit('sync', game);
-		socket.broadcast.to(game.id).emit('sync', game);
+	// Tick for some time, then autovote
+	let time = AUTOVOTE_TIMEOUT;
+	const INTERVAL = 1000; // tick every second
+	autovoteTimeoutMap[game.id] = setInterval(function countDownThenAutovote() {
+		if (time > 0) { 
+			console.log('Tick, time left ' + time);
+			time = time - INTERVAL;
+			socket.emit('tick', time); // notify initiator
+			socket.broadcast.to(game.id).emit('tick', time);
+		} else {
+			clearInterval(autovoteTimeoutMap[game.id]);
+			console.log('Casting autovote');
+			game.autovote();
+			socket.emit('sync', game); // notify initiator
+			socket.broadcast.to(game.id).emit('sync', game);
+		}
 	},
-	AUTOVOTE_TIMEOUT
+	INTERVAL
 	);
 }
 
