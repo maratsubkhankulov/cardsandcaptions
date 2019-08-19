@@ -21,7 +21,7 @@ const AUTOVOTE_TIMEOUT = 3000;
 /**
  * Game server state
  * Tracks games and connected clients. Some games are active, but
- * some players are are pre-game.
+ * some players are in pre-game.
  *
  * - client - has a clientId and an associated socket connection
  * - game - is an instance of a meme game. An abstract game entity that players are
