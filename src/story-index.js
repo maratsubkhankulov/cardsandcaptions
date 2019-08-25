@@ -11,7 +11,8 @@ window.onload = function () {
 function render() {
 	return (
 			<div>
-				<LeaderboardViewStory/>
+				{/* <LeaderboardViewStory/> */}
+				<GameViewStory/>
 			</div>
 	)
 }

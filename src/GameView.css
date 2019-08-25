@@ -6,6 +6,8 @@
 
 .Timer {
 	background-color: #000000;
+	top: 50%; left: 100%;
+	transform: translate(-120%,-50%);
 	border-radius: 50%;
 	color: #ffffff;
 	font-size: 15;
@@ -14,9 +16,11 @@
 	text-align: center;
 	vertical-align: middle;
 	line-height: 30px;
+	position: absolute;
 }
 
 .Banner {
+	position: relative;
   background-color: #42cef4;
 	color: #ffffff;
 	font-size: 15pt;
