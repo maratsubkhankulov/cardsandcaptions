@@ -74,13 +74,15 @@ class GameViewStory extends Component {
 		return (
 				<div>
 					<div className="Header">
-						<div className="Timer">:07</div>
 					</div>
 					<PlayerPanelView
 						players={players}
 					/>
 					<div className="Banner">
+						<div>
 						Steve won this round!
+						</div>
+						<div className="Timer">:07</div>
 					</div>
 					<div className="CaptionArea">
 						When you read a very long caption and it just doesn't seem to end

@@ -16,7 +16,7 @@ app.use(express.static('public')); // Serve our static assets from /public
 server.listen(port, () => console.log(`server started ${port}`));
 
 // Game server configuration
-const AUTOVOTE_TIMEOUT = 3000;
+const AUTOVOTE_TIMEOUT = 10000;
 
 /**
  * Game server state
@@ -57,7 +57,7 @@ function startAutovoteTimer(game, socket) {
 		if (time > 0) { 
 			console.log('Tick, time left ' + time);
 			time = time - INTERVAL;
-			socket.emit('tick', time); // notify initiator
+			socket.emit('tick', time/1000); // notify initiator, convert to seconds
 			socket.broadcast.to(game.id).emit('tick', time);
 		} else {
 			clearInterval(autovoteTimeoutMap[game.id]);

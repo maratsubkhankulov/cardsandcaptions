@@ -112,7 +112,15 @@ class GameView extends Component {
 		});
 
 		this.socket.on('tick', function(time) {
-			console.log(`Tick ` + time);
+			view.setState(
+				(state, props) => {
+					return {
+						timer: time,
+					};
+				},
+				() => {
+					console.log('Updated timer ' + time);
+				});
 		});
 
 		this.socket.on('init-game', function(game) {
@@ -360,6 +368,15 @@ class GameView extends Component {
 			);
 		}
 
+		let timer;
+		if (this.state.timer > 0) {
+			timer = (
+				<div className="Timer">
+					{this.state.timer}
+				</div>
+			);
+		}
+
 		if (this.state.leaderboard) {
 			return (
 				<LeaderboardView
@@ -376,7 +393,10 @@ class GameView extends Component {
 						players={this.state.players}
 					/>
 					<div className="Banner">
+						<div>
 						{this.state.bannerMessage}
+						</div>
+						{timer}
 					</div>
 					<div className="CaptionArea">
 						{this.state.caption}
