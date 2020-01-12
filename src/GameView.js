@@ -8,7 +8,13 @@ import HandView from './HandView.js';
 import TableView from './TableView.js';
 import LeaderboardView from './leaderboard/LeaderboardView.js';
 
-function stateToBanner(gameState, iAmJudge, game) {
+function stateToBanner(gameState, iAmJudge, playerId, game) {
+	let judge = game.getCurrentJudge();
+	let hasPlayerVoted = false;
+	if (typeof judge !== 'undefined') {
+		let player = game.getPlayer(playerId);
+		hasPlayerVoted = judge.hasPlayerVoted(player);
+	}
 	switch (gameState) {
 		case 'WAIT_TO_START':
 			return 'Waiting for players to join...';
@@ -17,13 +23,20 @@ function stateToBanner(gameState, iAmJudge, game) {
 			return 'Waiting for judge to be selected';
 			break;
 		case 'WAIT_FOR_VOTERS':
-			return 'Waiting for players to select cards';
+			if (iAmJudge) {
+				return 'Waiting for players to select cards';
+			} else {
+				if (hasPlayerVoted) {
+					return 'Waiting for others to select cards';
+				}
+				return 'Choose a card to match the caption';
+			}
 			break;
 		case 'WAIT_FOR_JUDGMENT':
 			if (iAmJudge) {
 				return 'Select a winning card!';
 			} else {
-				return 'Waiting for judge to select a winner';
+				return `Waiting for ${judge.name} to select a winner`;
 			}
 			break;
 		case 'END_OF_TURN':
@@ -119,7 +132,6 @@ class GameView extends Component {
 					};
 				},
 				() => {
-					console.log('Updated timer ' + time);
 				});
 		});
 
@@ -152,7 +164,7 @@ class GameView extends Component {
 		let newCaption = game.existsJudge() && game.getCurrentJudge().captionCard ?
 			game.getCurrentJudge().captionCard.caption : "no caption";
 
-		let newBannerMessage = stateToBanner(game.getState(), iAmJudge, game);
+		let newBannerMessage = stateToBanner(game.getState(), iAmJudge, this.state.playerId, game);
 
 		let newHand = defaultHand();
 		let newTable = [];
@@ -316,7 +328,7 @@ class GameView extends Component {
 
 	isJudgePlayer(game, id) {
 		if (game.existsJudge()) {
-			console.log(`is judge: ${game.getCurrentJudge().id}, ${id}, ${game.getCurrentJudge().id === id}`); 
+			//console.log(`is judge: ${game.getCurrentJudge().id}, ${id}, ${game.getCurrentJudge().id === id}`); 
 		 	return game.getCurrentJudge().id === id;
 		}
 		return false;

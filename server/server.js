@@ -58,7 +58,7 @@ function startAutovoteTimer(game, socket) {
 			console.log('Tick, time left ' + time);
 			time = time - INTERVAL;
 			socket.emit('tick', time/1000); // notify initiator, convert to seconds
-			socket.broadcast.to(game.id).emit('tick', time);
+			socket.broadcast.to(game.id).emit('tick', time/1000);
 		} else {
 			clearInterval(autovoteTimeoutMap[game.id]);
 			console.log('Casting autovote');
@@ -154,6 +154,9 @@ function onSelectImageCard(socket, clientId, move) {
 	const game = games[gameId];
 
 	game._selectImageCard(move.playerId, move.cardId);
+
+	socket.emit('sync', game);
+	socket.broadcast.to(gameId).emit('sync', game);
 }
 
 /**

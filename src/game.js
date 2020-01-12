@@ -90,7 +90,7 @@ export class Player {
 	}
 
 	hasPlayerVoted(voter) {
-		for (let i = 0; i < this.votes; i++) {
+		for (let i = 0; i < this.votes.length; i++) {
 			let v = this.votes[i];
 			if (v.player.id === voter.id) {
 				return true;
