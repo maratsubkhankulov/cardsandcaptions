@@ -1,4 +1,4 @@
-# The Meme Game in HTML/Javascript
+# Cards and Captions
 
 It's like Cards Against Humanity, but with memes.
 
