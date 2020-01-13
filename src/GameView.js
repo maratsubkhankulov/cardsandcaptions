@@ -339,7 +339,7 @@ class GameView extends Component {
 		if (this.game.getState() === 'WAIT_TO_START' &&
 			this.game.players.length >= Game.minPlayers()) {
 			startButton = (
-				<div onClick={this.sendStart}>
+				<div className="Button" onClick={this.sendStart}>
 					Start game
 				</div>
 			)

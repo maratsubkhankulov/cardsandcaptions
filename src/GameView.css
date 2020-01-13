@@ -68,6 +68,22 @@
 	text-decoration: overline;
 }
 
+div.Button {
+    color:#444;
+    border:1px solid #CCC;
+    background:#DDD;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+    vertical-align:middle;
+    max-width: 100px;
+    padding: 5px;
+    text-align: center;
+		margin: 0 auto;
+}
+
+div:active.Button {
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
+}
+
 div.card {
 	//border: 2px solid black;
   //border-radius: 5px;

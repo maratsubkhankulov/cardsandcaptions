@@ -75,6 +75,9 @@ class GameViewStory extends Component {
 				<div>
 					<div className="Header">
 					</div>
+					<div className="Button">
+						A button
+					</div>
 					<PlayerPanelView
 						players={players}
 					/>
