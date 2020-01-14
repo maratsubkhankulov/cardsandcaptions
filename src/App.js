@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import './common.css';
 import GameView from './GameView.js';
 import socketIOClient from 'socket.io-client';
 
@@ -161,7 +162,7 @@ class App extends Component {
 				<div>
 					<h4>{this.state.playerName}</h4>
 					<h5>Context id: {this.state.contextId}</h5>
-					<div onClick={() => this.createGame()}>Create game</div>
+					<div className='Button' onClick={() => this.createGame()}>Create game</div>
 					{list}
 				</div>
 			);

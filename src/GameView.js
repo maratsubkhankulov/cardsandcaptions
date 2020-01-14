@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './GameView.css';
+import './common.css';
 import { Game, Vote, Player } from './game';
 import { initGame, fillCardStacks, fillPlayers } from './game_utils';
 import CardView from './CardView.js';

@@ -1,0 +1,16 @@
+div.Button {
+	border-radius: 50px;
+	height: 40px;
+	width: 95%;
+	border: 1px solid grey;
+	margin-top: 5px;
+	box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+	color: grey;
+	text-align: center;
+	font-size: 24pt;
+	margin: 0 auto;
+}
+
+div:active.Button {
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
+}

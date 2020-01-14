@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import GameViewStory from './GameView.story.js';
+import AppStory from './App.story.js';
 import LeaderboardViewStory from './leaderboard/LeaderboardView.story.js';
 
 window.onload = function () {
@@ -12,7 +13,7 @@ function render() {
 	return (
 			<div>
 				{/* <LeaderboardViewStory/> */}
-				<GameViewStory/>
+				<AppStory/>
 			</div>
 	)
 }
