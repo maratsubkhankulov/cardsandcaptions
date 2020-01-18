@@ -65,7 +65,7 @@ function chooseAsync() {
 		.then(function() {
 			app.setState((state, props) => {
 				return {
-					contextId: contextId,
+					contextId: window.FBInstant.context.getID(),
 				};
 			},
 			() => {
