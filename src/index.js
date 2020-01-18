@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.js';
 
+let app = null;
+
 console.log('index loading');
 window.onload = function () {
 	console.log('onload')
@@ -53,6 +55,25 @@ function invitePlayers() {
 	);
 }
 
+function chooseAsync() {
+	console.log("Switch context via chooseAsync");
+	window.FBInstant.context
+		.chooseAsync({
+			minSize: 3,
+			maxSize: 5,
+		})
+		.then(function() {
+			app.setState((state, props) => {
+				return {
+					contextId: contextId,
+				};
+			},
+			() => {
+				console.log('Switched context');
+			});
+		});
+}
+
 function toDataURL(src, callback) {
 	let img = new Image();
 	img.crossOrigin = 'Anonymous';
@@ -69,7 +90,7 @@ function toDataURL(src, callback) {
 function start() {
 	console.log('Start');
 
-	ReactDOM.render(
+	app = ReactDOM.render(
 		<App
 			playerId={window.FBInstant.player.getID()}
 			playerName={window.FBInstant.player.getName()}
@@ -77,5 +98,6 @@ function start() {
 			contextId={window.FBInstant.context.getID()}
 			server="https://memegame-server.herokuapp.com/"
 			invitePlayers={invitePlayers}
+			chooseAsync={chooseAsync}
 		/>, document.getElementById('root'))
 }

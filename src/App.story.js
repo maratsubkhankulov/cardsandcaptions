@@ -17,6 +17,7 @@ class AppStory extends Component {
 					<h4>{this.state.playerName}</h4>
 					<h5>Context id: {this.state.contextId}</h5>
 					<div className='Button'>Create game</div>
+					<div className='Button'>Play with friends</div>
 				</div>
 			);
 

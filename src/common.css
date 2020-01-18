@@ -3,7 +3,6 @@ div.Button {
 	height: 40px;
 	width: 95%;
 	border: 1px solid grey;
-	margin-top: 5px;
 	box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
 	color: grey;
 	text-align: center;

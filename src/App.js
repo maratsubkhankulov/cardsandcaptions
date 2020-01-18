@@ -16,11 +16,13 @@ class App extends Component {
 			playerImgUrl: props.playerImgUrl,
 			contextId: props.contextId,
 			activeGamesStates: {},
+			showMenu: true,
 		}
 
 		let app = this;
 		let host = props.server;
 		this.invitePlayers = props.invitePlayers;
+		this.chooseAsync = props.chooseAsync;
 		this.socket = socketIOClient(host, function() { console.log(`Connected to ${host}`)});
 
 		this.socket.on('connect', () => {
@@ -105,6 +107,10 @@ class App extends Component {
 		});
 	}
 
+	switchContext(gameId) {
+		this.chooseAsync();
+	}
+
 	joinedGame(data) {
 		if (data.gameState) {
 			this.setState(
@@ -133,6 +139,18 @@ class App extends Component {
 		}
 	}
 
+	toggleMenu() {
+		this.setState(
+			(state, props) => {
+				return {
+					showMenu: !state.showMenu
+				}
+			},
+			() => {
+				console.log('Show menu: ' + this.state.showMenu);
+			});
+	}
+
   render() {
 		if (this.state.connected === false) {
 			return (
@@ -153,7 +171,7 @@ class App extends Component {
 		}
 
 		let gamesListView;
-		if (!gameView) {
+		if (this.state.showMenu) {
 			const list = Object.keys(this.state.activeGamesStates).map((key, index) => {
 				let gameId = key;
 				return <div key={gameId} onClick={() => this.joinGame(gameId)}> {gameId} </div>
@@ -163,6 +181,7 @@ class App extends Component {
 					<h4>{this.state.playerName}</h4>
 					<h5>Context id: {this.state.contextId}</h5>
 					<div className='Button' onClick={() => this.createGame()}>Create game</div>
+					<div className='Button' onClick={() => this.switchContext()}>Switch game</div>
 					{list}
 				</div>
 			);
@@ -170,6 +189,7 @@ class App extends Component {
 
     return (
       <div className="App">
+				<h5 onClick={() => this.toggleMenu()}>Toggle menu</h5>
 				{gamesListView}
 				{gameView}
 			</div>
