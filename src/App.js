@@ -15,7 +15,6 @@ class App extends Component {
 			playerName: props.playerName,
 			playerImgUrl: props.playerImgUrl,
 			contextId: props.contextId,
-			activeGamesStates: {},
 			showMenu: true,
 		}
 
@@ -70,26 +69,34 @@ class App extends Component {
 			app.joinedGame(data);
 		});
 
-		this.socket.on('active-games', function(data) {
-			if (app.state.contextId in data.games) {
+		this.socket.on('get-game-response', function(data) {
+			console.log('get-game-response');
+			console.log(data);
+			if (data.exists && app.state.contextId === data.gameId) {
 				app.joinGame(app.state.contextId);
 				return;
 			}
 			app.setState(
 				(state, props) => {
-					return { activeGamesStates: data.games }
+					return { gameState: data.gameState }
 				},
 				() => {
-					console.log(`fetched active games`);
+					console.log(`fetched current game`);
 				});
 		});
 
-		this.socket.emit('get-active-games');
+		this.getGameByContext(this.state.contextId);
+	}
 
+	getGameByContext(contextId) {
+		console.log('Get game by context: ' + contextId);
+		this.socket.emit('get-game', {
+			gameId: contextId
+		});
 	}
 
 	createGame() {
-		this.invitePlayers();
+		//this.invitePlayers();
 		this.socket.emit('create-game', {
 			playerId: this.state.playerId,
 			playerName: this.state.playerName,
@@ -170,19 +177,26 @@ class App extends Component {
 			)
 		}
 
-		let gamesListView;
+		let menuView;
 		if (this.state.showMenu) {
+			/** TODO move to server admin console or metrics
 			const list = Object.keys(this.state.activeGamesStates).map((key, index) => {
 				let gameId = key;
 				return <div key={gameId} onClick={() => this.joinGame(gameId)}> {gameId} </div>
 			});
-			gamesListView = (
+			*/
+			let createButton;
+			// Show create button if no active game state
+			if (!this.state.gameState) {
+					createButton = <div className='Button' onClick={() => this.createGame()}>Create game</div>
+			}
+
+			menuView = (
 				<div>
 					<h4>{this.state.playerName}</h4>
 					<h5>Context id: {this.state.contextId}</h5>
-					<div className='Button' onClick={() => this.createGame()}>Create game</div>
 					<div className='Button' onClick={() => this.switchContext()}>Switch game</div>
-					{list}
+					{createButton}
 				</div>
 			);
 		}
@@ -190,7 +204,7 @@ class App extends Component {
     return (
       <div className="App">
 				<h5 onClick={() => this.toggleMenu()}>Toggle menu</h5>
-				{gamesListView}
+				{menuView}
 				{gameView}
 			</div>
 		)

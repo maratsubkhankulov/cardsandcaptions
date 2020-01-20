@@ -251,6 +251,17 @@ io.on('connection', function (socket) {
 		socket.emit('active-games', {games: games});
 	});
 
+	socket.on('get-game', (data) => {
+		const id = data.gameId;
+		socket.emit(
+			'get-game-response',
+			{
+				exists: id in games, 
+				gameId: id,
+				gameState: games[id],
+			});
+	});
+
 	// Handle player actions
 	socket.on('actuate', function(move) {
 		const gameId = clientGameMap[clientId];

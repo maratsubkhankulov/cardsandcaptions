@@ -32,11 +32,11 @@ window.onload = function () {
 }
 
 function start() {
-	console.log("start new App instance with context: " + contextId);
 	// Assume that in development mode playerId is stored in URL query
 	const urlParams = new URLSearchParams(window.location.search);
 	const id = urlParams.get('playerId');
 	const contextId = urlParams.get('contextId');
+	console.log("start new App instance with context: " + contextId);
 	let name = `User_${id.substring(0,1)}`;
 	app = ReactDOM.render(
 		<App

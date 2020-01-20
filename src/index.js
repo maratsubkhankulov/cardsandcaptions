@@ -70,6 +70,7 @@ function chooseAsync() {
 			},
 			() => {
 				console.log('Switched context');
+				app.getActiveGames();
 			});
 		});
 }
