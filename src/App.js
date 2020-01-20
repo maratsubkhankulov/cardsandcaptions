@@ -85,10 +85,10 @@ class App extends Component {
 				});
 		});
 
-		this.getGameByContextId(this.state.contextId);
+		this.fetchGameByContextId(this.state.contextId);
 	}
 
-	getGameByContextId(contextId) {
+	fetchGameByContextId(contextId) {
 		console.log('Get game by context: ' + contextId);
 		this.socket.emit('get-game', {
 			gameId: contextId

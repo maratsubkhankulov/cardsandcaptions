@@ -22,7 +22,8 @@ function chooseAsync() {
 	},
 	() => {
 		console.log('Updated state');
-		window.location.href = '?' + urlParams.toString();
+		//window.location.href = '?' + urlParams.toString();
+		app.fetchGameByContextId(newContextId);
 	});
 }
 
