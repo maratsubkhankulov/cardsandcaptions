@@ -70,7 +70,7 @@ function chooseAsync() {
 			},
 			() => {
 				console.log('Switched context');
-				app.getActiveGames();
+				app.fetchGameByContextId(window.FBInstant.context.getID());
 			});
 		});
 }
