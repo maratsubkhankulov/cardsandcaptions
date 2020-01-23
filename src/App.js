@@ -75,19 +75,16 @@ class App extends Component {
 			if (data.exists && app.state.contextId === data.gameId) {
 				app.joinGame(app.state.contextId);
 				return;
+			} else {
+				app.createGame();
+				return;
 			}
-			app.setState(
-				(state, props) => {
-					return { gameState: data.gameState }
-				},
-				() => {
-					console.log(`fetched current game`);
-				});
 		});
 
 		this.fetchGameByContextId(this.state.contextId);
 	}
 
+	// Create game if it does not exist
 	fetchGameByContextId(contextId) {
 		console.log('Get game by context: ' + contextId);
 		this.socket.emit('get-game', {
@@ -179,24 +176,9 @@ class App extends Component {
 
 		let menuView;
 		if (this.state.showMenu) {
-			/** TODO move to server admin console or metrics
-			const list = Object.keys(this.state.activeGamesStates).map((key, index) => {
-				let gameId = key;
-				return <div key={gameId} onClick={() => this.joinGame(gameId)}> {gameId} </div>
-			});
-			*/
-			let createButton;
-			// Show create button if no active game state
-			if (!this.state.gameState) {
-					createButton = <div className='Button' onClick={() => this.createGame()}>Create game</div>
-			}
-
 			menuView = (
 				<div>
-					<h4>{this.state.playerName}</h4>
-					<h5>Context id: {this.state.contextId}</h5>
 					<div className='Button' onClick={() => this.switchContext()}>Switch game</div>
-					{createButton}
 				</div>
 			);
 		}
