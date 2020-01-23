@@ -178,7 +178,7 @@ class App extends Component {
 		if (this.state.showMenu) {
 			menuView = (
 				<div>
-					<div className='Button' onClick={() => this.switchContext()}>Switch game</div>
+					<div className='Button' onClick={() => this.switchContext()}>Play another group</div>
 				</div>
 			);
 		}
