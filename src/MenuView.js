@@ -15,7 +15,7 @@ class MenuView extends Component {
 
   render() {
 		return (
-			<div>
+			<div className='MenuContainer'>
 				<div className='Logo'>
 					<img className='Logo' src='./img/card_back.jpg'/>
 				</div>

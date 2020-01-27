@@ -1,5 +1,6 @@
 div.Button {
-	border-radius: 50px;
+	border-radius: 10px;
+	background-color: white;
 	height: 40px;
 	width: 95%;
 	border: 1px solid grey;
