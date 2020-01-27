@@ -16,10 +16,12 @@ class MenuView extends Component {
   render() {
 		return (
 			<div className='MenuContainer'>
+				<br/>
+				<br/>
 				<div className='Logo'>
 					<img className='Logo' src='./img/card_back.jpg'/>
 				</div>
-				<div className='Button'>Play in this group</div>
+				<div className='Button'>Play this group</div>
 				<br/>
 				<div className='Button' onClick={() => this.switchContext()}>Play another group</div>
 				<br/>
