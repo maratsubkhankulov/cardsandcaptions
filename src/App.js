@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import './common.css';
 import GameView from './GameView.js';
+import MenuView from './MenuView.js';
 import socketIOClient from 'socket.io-client';
 
 class App extends Component {
@@ -177,9 +178,7 @@ class App extends Component {
 		let menuView;
 		if (this.state.showMenu) {
 			menuView = (
-				<div>
-					<div className='Button' onClick={() => this.switchContext()}>Play another group</div>
-				</div>
+				<MenuView/>
 			);
 		}
 
