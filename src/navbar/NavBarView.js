@@ -5,27 +5,18 @@ class NavBarView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			onGameClick: props.onGameClick,
-			onMenuClick: props.onMenuClick,
+			onClickListener: props.onClickListener,
 		}
 	}
 
 	componentDidMount() {
 	}
 
-	onGameClick() {
-		this.state.onGameClick();
-	}
-
-	onMenuClick() {
-		this.state.onMenuClick();
-	}
-
   render() {
 		return (
 			<div className="navbar">
-				<div className="navbar-item" onClick={() => this.onMenuClick()}>Menu</div>
-				<div className="navbar-item" onClick={() => this.onGameClick()}>Game</div>
+				<div className="navbar-item" onClick={() => this.state.onClickListener('back')}>Back</div>
+				<div className="navbar-item" onClick={() => this.state.onClickListener('start_game')}>Start game</div>
 			</div>
 		);
   }

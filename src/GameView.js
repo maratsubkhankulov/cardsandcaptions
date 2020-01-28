@@ -400,6 +400,9 @@ class GameView extends Component {
 			return (
 				<div className="Game">
 					<div className="Header">
+						<div className="Button">
+							Back
+						</div>
 						{startButton}
 					</div>
 					<PlayerPanelView

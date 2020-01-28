@@ -16,9 +16,17 @@ let showMenu = true;
 function ActiveView(props) {
 	const showMenu = props.showMenu;
 	if (showMenu) {
-		return <MenuView/>;
+		return <MenuView
+			onClickListener={onMenuClick}/>;
 	}
 	return <GameViewStory/>;
+}
+
+function onMenuClick(buttonName) {
+	console.log("Menu click: " + buttonName);
+	if (buttonName === 'play_here') {
+		setShowGame();
+	}
 }
 
 function setShowMenu() {
@@ -44,10 +52,6 @@ function render() {
 				<GameViewStory/>
 				*/}
 				<ActiveView showMenu={showMenu} />
-				<NavBarView
-					onMenuClick={setShowMenu}
-					onGameClick={setShowGame}
-				/>
 			</div>
 	)
 }

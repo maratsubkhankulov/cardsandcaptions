@@ -5,6 +5,7 @@ import CardView from './CardView.js';
 import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
 import AvatarView from './AvatarView.js';
+import NavBarView from './navbar/NavBarView.js';
 
 const uuid = require('uuid/v4');
 
@@ -13,6 +14,10 @@ class GameViewStory extends Component {
 		super(props);
 		this.state = {
 		}
+	}
+
+	onClickListener(buttonName) {
+		console.log("Click: " + buttonName);
 	}
 
 	render() {
@@ -73,11 +78,9 @@ class GameViewStory extends Component {
 
 		return (
 				<div>
-					<div className="Header">
-					</div>
-					<div className="Button">
-						Start game
-					</div>
+					<NavBarView
+						onClickListener={this.onClickListener}
+					/>
 					<PlayerPanelView
 						players={players}
 					/>
