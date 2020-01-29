@@ -33,9 +33,9 @@
 .CaptionArea {
 	background-color: #ffffff;
 	color: #777777;
-	height: 100px;
+	height: 50px;
 	font-size: 20;
-	min-height: 80px;
+	min-height: 50px;
 	text-align: center;
 	vertical-align: middle;
 	padding: 10px;

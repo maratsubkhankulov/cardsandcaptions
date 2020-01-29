@@ -23,7 +23,7 @@ class MenuView extends Component {
 				<div className='Logo'>
 					<img className='Logo' src='./img/card_back.jpg'/>
 				</div>
-				<div className='Button' onClick={() => this.onClickListener('play_here')}>Play this group</div>
+				<div className='Button' onClick={() => this.onClickListener('play_here')}>Return to game</div>
 				<br/>
 				<div className='Button' onClick={() => this.onClickListener('play_another')}>Play another group</div>
 				<br/>

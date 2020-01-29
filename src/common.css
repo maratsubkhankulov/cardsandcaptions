@@ -14,3 +14,13 @@ div.Button {
 div:active.Button {
     box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
 }
+
+div.SmallButton {
+	border-radius: 4px;
+	background-color: white;
+	height: 40px;
+	border: 1px solid grey;
+	box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+	color: grey;
+	text-align: center;
+}

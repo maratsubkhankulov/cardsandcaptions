@@ -15,8 +15,7 @@ class NavBarView extends Component {
   render() {
 		return (
 			<div className="navbar">
-				<div className="navbar-item" onClick={() => this.onClickListener('back')}>Back</div>
-				<div className="navbar-item" onClick={() => this.onClickListener('start_game')}>Start game</div>
+				<div className="navbar-item" onClick={() => this.onClickListener('back')}>Back to menu</div>
 			</div>
 		);
   }
