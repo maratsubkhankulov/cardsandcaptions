@@ -19,6 +19,9 @@ class App extends Component {
 			showMenu: true,
 		}
 
+		this.onMenuClick = this.onMenuClick.bind(this);
+		this.onGameClick = this.onGameClick.bind(this);
+
 		let app = this;
 		let host = props.server;
 		this.invitePlayers = props.invitePlayers;
@@ -144,16 +147,36 @@ class App extends Component {
 		}
 	}
 
-	toggleMenu() {
-		this.setState(
-			(state, props) => {
-				return {
-					showMenu: !state.showMenu
+	onGameClick(buttonName) {
+		let app = this;
+		if (buttonName === 'back') {
+			this.setState(
+				(state, props) => {
+					return {
+						showMenu: true
+					}
+				},
+				() => {
+					console.log('showMenu: ' + app.state.showMenu);
 				}
-			},
-			() => {
-				console.log('Show menu: ' + this.state.showMenu);
-			});
+			);
+		}
+	}
+
+	onMenuClick(buttonName) {
+		let app = this;
+		if (buttonName === 'play_here') {
+			this.setState(
+				(state, props) => {
+					return {
+						showMenu: false
+					}
+				},
+				() => {
+					console.log('showMenu: ' + app.state.showMenu);
+				}
+			);
+		}
 	}
 
   render() {
@@ -163,30 +186,28 @@ class App extends Component {
 			)
 		}
 
-		let gameView;
-
-		if (this.state.gameState) {
-			gameView = (
-					<GameView
-						socket={this.socket}
-						gameState={this.state.gameState}
-						playerId={this.state.playerId}
-					/>
-			)
-		}
-
-		let menuView;
+		let activeView;
+		console.log("Render: " + this.state.showMenu);
 		if (this.state.showMenu) {
-			menuView = (
-				<MenuView/>
+			activeView = (
+				<MenuView
+					onClickListener={this.onMenuClick}
+				/>
 			);
+		} else if (this.state.gameState) {
+				activeView = (
+						<GameView
+							onClickListener={this.onGameClick}
+							socket={this.socket}
+							gameState={this.state.gameState}
+							playerId={this.state.playerId}
+						/>
+				)
 		}
 
     return (
       <div className="App">
-				<h5 onClick={() => this.toggleMenu()}>Toggle menu</h5>
-				{menuView}
-				{gameView}
+				{activeView}
 			</div>
 		)
   }

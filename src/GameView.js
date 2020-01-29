@@ -8,6 +8,7 @@ import PlayerPanelView from './PlayerPanelView.js';
 import HandView from './HandView.js';
 import TableView from './TableView.js';
 import LeaderboardView from './leaderboard/LeaderboardView.js';
+import NavBarView from './navbar/NavBarView.js';
 
 function stateToBanner(gameState, iAmJudge, playerId, game) {
 	let judge = game.getCurrentJudge();
@@ -95,6 +96,7 @@ class GameView extends Component {
 			lastWin: null,
 			leaderboard: null,
 		}
+		this.onClickListener = props.onClickListener;
 		this.socket = props.socket;
 		this.game = new Game();
 		this.game.sync(props.gameState);
@@ -399,12 +401,9 @@ class GameView extends Component {
 		} else {
 			return (
 				<div className="Game">
-					<div className="Header">
-						<div className="Button">
-							Back
-						</div>
-						{startButton}
-					</div>
+					<NavBarView
+						onClickListener={this.onClickListener}
+					/>
 					<PlayerPanelView
 						players={this.state.players}
 					/>
