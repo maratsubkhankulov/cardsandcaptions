@@ -158,6 +158,7 @@ class App extends Component {
 				},
 				() => {
 					console.log('showMenu: ' + app.state.showMenu);
+					this.fetchGameByContextId(this.state.contextId);
 				}
 			);
 		}
