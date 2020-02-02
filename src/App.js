@@ -115,7 +115,7 @@ class App extends Component {
 		});
 	}
 
-	switchContext(gameId) {
+	switchContext() {
 		this.chooseAsync();
 	}
 
@@ -177,6 +177,9 @@ class App extends Component {
 					console.log('showMenu: ' + app.state.showMenu);
 				}
 			);
+		} else
+		if (buttonName === 'play_another') {
+			this.switchContext();
 		}
 	}
 
